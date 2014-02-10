@@ -187,14 +187,10 @@ func (g Grid2D) ShowData(layer string) {
 	}
 }
 
-func MakeGrid2D(width int, height int, c Cell) Grid2D {
+func MakeGrid2D(width int, height int) Grid2D {
 	g := Grid2D{make([][]Cell, height)}
 	for y := 0; y < height; y++ {
 		g.Cells[y] = make([]Cell, width)
-		for x := 0; x < width; x++ {
-			p := Point{x, y}
-			g.Cells[y][x] = c.Place(p)
-		}
 	}
 	return g
 }

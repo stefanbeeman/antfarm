@@ -12,7 +12,7 @@ type Unit interface {
 }
 
 type Worm struct {
-	position Point
+	Position Point
 	delay    int
 }
 
@@ -26,7 +26,7 @@ func (this Worm) Act(w *World) Unit {
 }
 
 func (this Worm) Where() Point {
-	return this.position
+	return this.Position
 }
 
 func (this Worm) busy() bool {
@@ -38,16 +38,16 @@ func (this Worm) move(w *World) {
 	var newPos Point
 	switch dir {
 	case 0:
-		newPos = this.position.Add(NORTH)
+		newPos = this.Position.Add(NORTH)
 	case 1:
-		newPos = this.position.Add(SOUTH)
+		newPos = this.Position.Add(SOUTH)
 	case 2:
-		newPos = this.position.Add(EAST)
+		newPos = this.Position.Add(EAST)
 	case 3:
-		newPos = this.position.Add(WEST)
+		newPos = this.Position.Add(WEST)
 	}
 	if w.Contains(newPos) {
-		this.position = newPos
+		this.Position = newPos
 		this.delay += 10
 	} else {
 		this.move(w)

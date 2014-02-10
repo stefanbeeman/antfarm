@@ -30,9 +30,9 @@ type Material struct {
 	Armor     int
 }
 
-func LoadMaterials() []Material {
+func LoadMaterials(data string) []Material {
 	mats := make([]Material, 0)
-	buffer, err := ioutil.ReadFile("app/data/material.yml")
+	buffer, err := ioutil.ReadFile(data + "/material.yml")
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -40,7 +40,6 @@ func LoadMaterials() []Material {
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(mats)
 	}
 	return mats
 }

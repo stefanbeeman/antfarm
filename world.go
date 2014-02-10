@@ -36,8 +36,7 @@ func (c AFCell) ShowData(prop string) string {
 	return "[" + strconv.Itoa(data) + "]"
 }
 
-func MakeCell() AFCell {
-	p := Point{0, 0}
+func MakeCell(p Point) AFCell {
 	c := AFCell{p, make(map[string]int)}
 	c.Set("material", 0)
 	c.Set("solid", 0)
@@ -66,23 +65,35 @@ func (w World) Run(tics int) {
 	for tic := 0; tic < tics; tic++ {
 		w.Step()
 		w.Resolve()
-		if tic%100 == 0 {
-			fmt.Println("Current Tic: " + strconv.Itoa(tic))
-		}
 	}
 }
 
-func MakeWorld(width int, height int) World {
-	c := MakeCell()
-	g := MakeGrid2D(width, height, c)
-	m := LoadMaterials()
+func (w *World) AddUnit(u Unit) {
+	w.Units = append(w.Units, u)
+}
+
+func MakeWorld(data string, width int, height int, worms int) World {
+	g := MakeGrid2D(width, height)
+	m := LoadMaterials(data)
 	u := make([]Unit, 0)
 	w := World{g, 0, m, u}
-	w.Each(func(c Cell, p Point) {
-		if p.X == 0 {
-			c.Set("solid", 1)
-			fmt.Println(c)
+
+	for y, row := range w.Cells {
+		for x, _ := range row {
+			p := Point{x, y}
+			c := MakeCell(p)
+			if x == 0 || y == 0 || x == (width-1) || y == (height-1) {
+				c.Set("solid", 1)
+			}
+			w.Set(p, c)
 		}
-	})
+	}
+
+	for n := 0; n < worms; n++ {
+		p := w.Random()
+		worm := Worm{p, 0}
+		w.AddUnit(worm)
+	}
+
 	return w
 }
