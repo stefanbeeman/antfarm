@@ -60,8 +60,8 @@ type Grid2D struct {
 	Cells [][]Cell
 }
 
-func (g Grid2D) Width() int {
-	return len(g.Cells[0])
+func (this Grid2D) Width() int {
+	return len(this.Cells[0])
 }
 
 func (g Grid2D) Height() int {
@@ -76,7 +76,7 @@ func (g Grid2D) Size() []int {
 }
 
 func (g Grid2D) Contains(here Point) bool {
-	return (here.X > 0) && (here.X <= g.Width()) && (here.Y > 0) && (here.Y <= g.Height())
+	return (here.X >= 0) && (here.X < g.Width()) && (here.Y >= 0) && (here.Y < g.Height())
 }
 
 func (g Grid2D) Get(here Point) Cell {

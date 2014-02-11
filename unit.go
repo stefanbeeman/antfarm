@@ -1,55 +1,50 @@
 package antfarm
 
-import (
-	"math/rand"
-)
+import "fmt"
 
 type Unit interface {
-	Act(*World) Unit
-	Where() Point
-	busy() bool
-	move(*World)
+	Actor
+	Mover
 }
 
 type Worm struct {
-	Position Point
-	delay    int
+	RandomMover
+	id    int
+	delay int
 }
 
-func (this Worm) Act(w *World) Unit {
-	if !this.busy() {
-		this.move(w)
-	} else {
-		this.delay += -1
-	}
-	return this
-}
-
-func (this Worm) Where() Point {
-	return this.Position
+func (this *Worm) setId(id int) {
+	this.id = id
 }
 
 func (this Worm) busy() bool {
 	return this.delay > 0
 }
 
-func (this Worm) move(w *World) {
-	dir := rand.Intn(3)
-	var newPos Point
-	switch dir {
-	case 0:
-		newPos = this.Position.Add(NORTH)
-	case 1:
-		newPos = this.Position.Add(SOUTH)
-	case 2:
-		newPos = this.Position.Add(EAST)
-	case 3:
-		newPos = this.Position.Add(WEST)
-	}
-	if w.Contains(newPos) {
-		this.Position = newPos
-		this.delay += 10
+func (this Worm) rollInit() int {
+	return d6() + 10
+}
+
+func (this *Worm) tic(world *World) {
+	if this.delay > 0 {
+		this.delay--
 	} else {
-		this.move(w)
+		this.act(world)
 	}
+}
+
+func (this *Worm) act(world *World) {
+	baseDelay := this.Speed
+	init := this.rollInit()
+	this.delay = (baseDelay / init)
+	this.move(world)
+	fmt.Println("Worm", this.id, "is moving to", this.Location.X, this.Location.Y)
+}
+
+func makeWorm(w World) *Worm {
+	worm := new(Worm)
+	worm.Speed = 1000
+	worm.Location = w.Random()
+	worm.delay = 0
+	return worm
 }

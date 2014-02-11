@@ -28,12 +28,12 @@ func (c AFCell) Set(prop string, value int) {
 }
 
 func (c AFCell) Show() string {
-	return "[ ]"
+	return "#"
 }
 
 func (c AFCell) ShowData(prop string) string {
 	data := c.Get(prop)
-	return "[" + strconv.Itoa(data) + "]"
+	return strconv.Itoa(data)
 }
 
 func MakeCell(p Point) AFCell {
@@ -47,35 +47,32 @@ type World struct {
 	Grid2D
 	Now       int
 	Materials []Material
-	Units     []Unit
+	Actors    []Actor
 }
 
-func (w World) Step() {
-	w.Now++
-	for _, unit := range w.Units {
-		unit.Act(&w)
+func (this *World) tic() {
+	this.Now++
+	for _, actor := range this.Actors {
+		actor.tic(this)
 	}
 }
 
-func (w World) Resolve() {
-	//fmt.Println("Resolve")
-}
-
-func (w World) Run(tics int) {
-	for tic := 0; tic < tics; tic++ {
-		w.Step()
-		w.Resolve()
+func (this World) Run(tics int) {
+	for i := 0; i < tics; i++ {
+		fmt.Println(this.Now)
+		this.tic()
 	}
 }
 
-func (w *World) AddUnit(u Unit) {
-	w.Units = append(w.Units, u)
+func (this *World) AddActor(a Actor, id int) {
+	a.setId(id)
+	this.Actors = append(this.Actors, a)
 }
 
 func MakeWorld(data string, width int, height int, worms int) World {
 	g := MakeGrid2D(width, height)
 	m := LoadMaterials(data)
-	u := make([]Unit, 0)
+	u := make([]Actor, 0)
 	w := World{g, 0, m, u}
 
 	for y, row := range w.Cells {
@@ -90,10 +87,8 @@ func MakeWorld(data string, width int, height int, worms int) World {
 	}
 
 	for n := 0; n < worms; n++ {
-		p := w.Random()
-		worm := Worm{p, 0}
-		w.AddUnit(worm)
+		a := makeWorm(w)
+		w.AddActor(a, n)
 	}
-
 	return w
 }
