@@ -39,13 +39,6 @@ type Point struct {
 	Y int
 }
 
-var (
-	NORTH = Point{0, -1}
-	SOUTH = Point{0, 1}
-	EAST  = Point{1, 0}
-	WEST  = Point{-1, 0}
-)
-
 func (this Point) Add(that Point) Point {
 	return Point{this.X + that.X, this.Y + that.Y}
 }

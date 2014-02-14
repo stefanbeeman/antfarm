@@ -1,45 +1,31 @@
 package antfarm
 
-import (
-	"fmt"
-)
-
-type Actor interface {
-	setId(int)
-	act(i *World)
-	busy() bool
-	rollInit() int
-	tic(*World)
+type Action struct {
+	delay    int
+	complete func()
 }
 
-type RootActor struct {
-	id    int
-	delay int
+type Actor struct {
+	currentAction Action
 }
 
-func (this RootActor) setId(id int) {
-	this.id = id
+func (this *Actor) act(a Action) {
+	this.currentAction = a
 }
 
-func (this *RootActor) act(world *World) {
-	baseDelay := 1000
-	init := this.rollInit()
-	this.delay = (baseDelay / init)
-	fmt.Println("Actor", this.id, " taking an action.")
+func (this *Actor) react(a Action) {
+	this.currentAction.delay = this.currentAction.delay + a.delay
+	a.complete()
 }
 
-func (this RootActor) busy() bool {
-	return this.delay > 0
+func (this *Actor) ready() bool {
+	return this.currentAction.delay < 1
 }
 
-func (this RootActor) rollInit() int {
-	return d6() + 10
-}
-
-func (this *RootActor) tic(world *World) {
-	if this.delay > 0 {
-		this.delay--
+func (this *Actor) tic() {
+	if this.ready() {
+		this.currentAction.complete()
 	} else {
-		this.act(world)
+		this.currentAction.delay--
 	}
 }
