@@ -53,7 +53,7 @@ type World struct {
 func (this *World) tic() {
 	this.Now++
 	for _, actor := range this.Actors {
-		actor.tic(this)
+		actor.tic()
 	}
 }
 
@@ -65,7 +65,6 @@ func (this World) Run(tics int) {
 }
 
 func (this *World) AddActor(a Actor, id int) {
-	a.setId(id)
 	this.Actors = append(this.Actors, a)
 }
 
@@ -86,9 +85,9 @@ func MakeWorld(data string, width int, height int, worms int) World {
 		}
 	}
 
-	for n := 0; n < worms; n++ {
-		a := makeWorm(w)
-		w.AddActor(a, n)
-	}
+	// for n := 0; n < worms; n++ {
+	// 	a := makeWorm(w)
+	// 	w.AddActor(a, n)
+	// }
 	return w
 }

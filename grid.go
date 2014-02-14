@@ -39,14 +39,30 @@ type Point struct {
 	Y int
 }
 
-func (this Point) Add(that Point) Point {
+func (this Point) add(that Point) Point {
 	return Point{this.X + that.X, this.Y + that.Y}
 }
 
-func (here Point) DistanceTo(there Point) float64 {
+func (here Point) distanceTo(there Point) float64 {
 	x := math.Pow(float64(there.X)-float64(here.X), 2)
 	y := math.Pow(float64(there.Y)-float64(here.Y), 2)
 	return math.Sqrt(x + y)
+}
+
+func (this Point) vectorTo(that Point) Point {
+	X := 0
+	Y := 0
+	if this.X < that.X {
+		X = 1
+	} else if this.X > that.X {
+		X = -1
+	}
+	if this.Y < that.Y {
+		Y = 1
+	} else if this.Y < that.Y {
+		Y = -1
+	}
+	return Point{X, Y}
 }
 
 type Grid2D struct {
