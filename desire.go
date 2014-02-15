@@ -26,6 +26,10 @@ func (this *DesireQueue) Swap(i int, j int) {
 	this.queue[i], this.queue[j] = this.queue[j], this.queue[i]
 }
 
+func (this *DesireQueue) add(d Desire) {
+	this.queue = append(this.queue, d)
+}
+
 func (this *DesireQueue) decide() bool {
 	top := this.queue[0]
 	sort.Sort(this)

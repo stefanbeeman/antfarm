@@ -5,7 +5,7 @@ package antfarm
 //	"math/rand"
 //)
 
-type Statline struct {
+type statline struct {
 	Body      int
 	Agility   int
 	Reaction  int

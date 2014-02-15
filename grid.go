@@ -6,33 +6,9 @@ import (
 	"math/rand"
 )
 
-type Cell interface {
-	Place(Point) Cell
-	Where() Point
-	Get(string) int
-	Set(string, int)
-	Show() string
-	ShowData(string) string
-}
-
 //Type signatures for common lambda functions used when iterating over grids.
 type iterator func(Cell, Point)
 type locator func(Cell, Point) bool
-
-type Grid interface {
-	Size() []int
-	Contains(Point) bool
-	Get(Point) Cell
-	Set(Point, Cell)
-	Each(iterator)
-	Find(locator) []Point
-	Slice(Point, Point) Grid
-	Around(Point, int) Grid
-	Random() Point
-	RandomCurved(int) Point
-	Show()
-	ShowData(string)
-}
 
 type Point struct {
 	X int
@@ -69,46 +45,46 @@ type Grid2D struct {
 	Cells [][]Cell
 }
 
-func (this Grid2D) Width() int {
+func (this Grid2D) width() int {
 	return len(this.Cells[0])
 }
 
-func (g Grid2D) Height() int {
+func (g Grid2D) height() int {
 	return len(g.Cells)
 }
 
-func (g Grid2D) Size() []int {
+func (g Grid2D) size() []int {
 	size := make([]int, 2)
-	size[0] = g.Width()
-	size[1] = g.Height()
+	size[0] = g.width()
+	size[1] = g.height()
 	return size
 }
 
-func (g Grid2D) Contains(here Point) bool {
-	return (here.X >= 0) && (here.X < g.Width()) && (here.Y >= 0) && (here.Y < g.Height())
+func (g Grid2D) contains(here Point) bool {
+	return (here.X >= 0) && (here.X < g.width()) && (here.Y >= 0) && (here.Y < g.height())
 }
 
-func (g Grid2D) Get(here Point) Cell {
+func (g Grid2D) get(here Point) Cell {
 	return g.Cells[here.Y][here.X]
 }
 
-func (g Grid2D) Set(here Point, c Cell) {
+func (g Grid2D) set(here Point, c Cell) {
 	g.Cells[here.Y][here.X] = c
 }
 
-func (g Grid2D) Each(fn iterator) {
-	for y := 0; y < g.Height(); y++ {
-		for x := 0; x < g.Width(); x++ {
+func (g Grid2D) each(fn iterator) {
+	for y := 0; y < g.height(); y++ {
+		for x := 0; x < g.width(); x++ {
 			p := Point{x, y}
-			c := g.Get(p)
+			c := g.get(p)
 			fn(c, p)
 		}
 	}
 }
 
-func (g Grid2D) Find(fn locator) []Point {
+func (g Grid2D) find(fn locator) []Point {
 	result := make([]Point, 0)
-	g.Each(func(c Cell, p Point) {
+	g.each(func(c Cell, p Point) {
 		if fn(c, p) {
 			result = append(result, p)
 		}
@@ -133,9 +109,9 @@ func orderSlice(a int, b int, limit int) (low int, high int) {
 	return l, h
 }
 
-func (g Grid2D) Slice(start Point, end Point) Grid {
-	lowX, highX := orderSlice(start.X, end.X, g.Width())
-	lowY, highY := orderSlice(start.Y, end.Y, g.Height())
+func (g Grid2D) slice(start Point, end Point) Grid2D {
+	lowX, highX := orderSlice(start.X, end.X, g.width())
+	lowY, highY := orderSlice(start.Y, end.Y, g.height())
 
 	sliced := g.Cells[lowY : highY+1]
 	for y := 0; y < len(sliced); y++ {
@@ -144,37 +120,37 @@ func (g Grid2D) Slice(start Point, end Point) Grid {
 	return Grid2D{sliced}
 }
 
-func (g Grid2D) Around(center Point, r int) Grid {
+func (g Grid2D) around(center Point, r int) Grid2D {
 	start := Point{center.X - r, center.Y - r}
 	end := Point{center.X + r, center.Y + r}
-	return g.Slice(start, end)
+	return g.slice(start, end)
 }
 
-func (g Grid2D) Random() Point {
-	x := rand.Intn(g.Width())
-	y := rand.Intn(g.Height())
+func (g Grid2D) random() Point {
+	x := rand.Intn(g.width())
+	y := rand.Intn(g.height())
 	return Point{x, y}
 }
 
-func (g Grid2D) RandomCurved(curve int) Point {
+func (g Grid2D) randomCurved(curve int) Point {
 	x := 0
 	y := 0
 	for i := 0; i < curve; i++ {
-		x = x + rand.Intn(g.Width())
-		y = y + rand.Intn(g.Height())
+		x = x + rand.Intn(g.width())
+		y = y + rand.Intn(g.height())
 	}
-	x = int(float64(x) / float64(curve))
-	y = int(float64(y) / float64(curve))
+	x = x / curve
+	y = y / curve
 	return Point{x, y}
 }
 
-func (g Grid2D) Show() {
-	for y := 0; y < g.Height(); y++ {
+func (g Grid2D) show() {
+	for y := 0; y < g.height(); y++ {
 		line := ""
-		for x := 0; x < g.Width(); x++ {
-			c := g.Get(Point{x, y})
-			line = line + "[" + c.Show() + "]"
-			if x < (g.Width() - 1) {
+		for x := 0; x < g.width(); x++ {
+			c := g.get(Point{x, y})
+			line = line + "[" + c.show() + "]"
+			if x < (g.width() - 1) {
 				line = line + " "
 			}
 		}
@@ -182,13 +158,13 @@ func (g Grid2D) Show() {
 	}
 }
 
-func (g Grid2D) ShowData(layer string) {
-	for y := 0; y < g.Height(); y++ {
+func (g Grid2D) showData(layer string) {
+	for y := 0; y < g.height(); y++ {
 		line := ""
-		for x := 0; x < g.Width(); x++ {
-			c := g.Get(Point{x, y})
-			line = line + "[" + c.ShowData(layer) + "]"
-			if x < (g.Width() - 1) {
+		for x := 0; x < g.width(); x++ {
+			c := g.get(Point{x, y})
+			line = line + "[" + c.showData(layer) + "]"
+			if x < (g.width() - 1) {
 				line = line + " "
 			}
 		}
@@ -196,10 +172,14 @@ func (g Grid2D) ShowData(layer string) {
 	}
 }
 
-func MakeGrid2D(width int, height int) Grid2D {
+func makeGrid2D(width int, height int) Grid2D {
 	g := Grid2D{make([][]Cell, height)}
 	for y := 0; y < height; y++ {
 		g.Cells[y] = make([]Cell, width)
+		for x := 0; x < width; x++ {
+			l := Point{x, y}
+			g.Cells[y][x] = makeCell(l)
+		}
 	}
 	return g
 }
