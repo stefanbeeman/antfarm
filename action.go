@@ -18,5 +18,5 @@ func (this Unit) generateWaitAction(duration int) Action {
 }
 
 func (this Unit) ready() bool {
-	return this.currentAction
+	return this.currentAction.delay <= 1
 }

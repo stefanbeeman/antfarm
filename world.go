@@ -13,8 +13,8 @@ type World struct {
 
 func (this *World) tic() {
 	this.Now++
-	for _, actor := range this.Units {
-		actor.tic()
+	for _, unit := range this.Units {
+		unit.tic(this)
 	}
 }
 

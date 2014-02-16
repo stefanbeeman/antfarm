@@ -14,7 +14,7 @@ type Unit struct {
 
 func (this *Unit) tic(w *World) {
 	this.currentAction.delay--
-	if this.ready {
+	if this.ready() {
 		this.currentAction.complete()
 		this.think(w)
 	}
@@ -31,4 +31,8 @@ func (this *Unit) think(w *World) {
 		this.currentTask = this.generateTask()
 	}
 	this.currentAction = this.currentTask.next()
+}
+
+func (this *Unit) generateTask() Task {
+	return Task{}
 }

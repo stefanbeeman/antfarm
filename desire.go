@@ -32,6 +32,7 @@ func (this *DesireQueue) add(d Desire) Desire {
 }
 
 func (this *DesireQueue) decide() Desire {
+	sort.Sort(this)
 	return this.queue[0]
 }
 
