@@ -30,10 +30,9 @@ func (this *DesireQueue) add(d Desire) {
 	this.queue = append(this.queue, d)
 }
 
-func (this *DesireQueue) decide() bool {
-	top := this.queue[0]
+func (this *DesireQueue) decide() Desire {
 	sort.Sort(this)
-	return this.queue[0] == top
+	return this.queue[0]
 }
 
 func (this DesireQueue) next() Desire {
