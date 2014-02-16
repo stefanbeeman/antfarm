@@ -26,12 +26,12 @@ func (this *DesireQueue) Swap(i int, j int) {
 	this.queue[i], this.queue[j] = this.queue[j], this.queue[i]
 }
 
-func (this *DesireQueue) add(d Desire) {
+func (this *DesireQueue) add(d Desire) Desire {
 	this.queue = append(this.queue, d)
+	return this.decide()
 }
 
 func (this *DesireQueue) decide() Desire {
-	sort.Sort(this)
 	return this.queue[0]
 }
 
