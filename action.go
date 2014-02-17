@@ -1,5 +1,7 @@
 package antfarm
 
+import "fmt"
+
 const (
 	SIMPLE  int = 1500
 	COMPLEX int = 3000
@@ -15,20 +17,21 @@ type BasicAction struct {
 	fnComplete   func()
 }
 
-func (this BasicAction) tic() {
+func (this *BasicAction) tic() {
 	this.currentDelay--
-	if this.currentDelay > 1 {
+	if this.currentDelay < 1 {
 		this.fnComplete()
 	}
 }
 
 func (this BasicAction) complete() bool {
-	return this.currentDelay <= 1
+	return this.currentDelay < 1
 }
 
 func makeWaitAction(duration int) Action {
-	return BasicAction{
+	act := BasicAction{
 		duration,
 		func() {},
 	}
+	return &act
 }

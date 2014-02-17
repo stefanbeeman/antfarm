@@ -20,7 +20,7 @@ type RandomWalker struct {
 }
 
 func (this RandomWalker) move(u *BasicUnit, vector Point) {
-	u.Position.add(vector)
+	u.Position = u.Position.add(vector)
 }
 
 func (this RandomWalker) moveTo(u *BasicUnit, p Point) Task {
@@ -49,10 +49,11 @@ func (this RandomWalker) moveTo(u *BasicUnit, p Point) Task {
 					this.move(u, WEST)
 				}
 			}
-			return BasicAction{
+			act := BasicAction{
 				this.Speed,
 				fn,
 			}
+			return &act
 		},
 	}
 }

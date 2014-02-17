@@ -20,12 +20,11 @@ type BasicUnit struct {
 	mover         *RandomWalker
 }
 
-func (this BasicUnit) tic(w *World) {
-	fmt.Println(this.currentAction)
+func (this *BasicUnit) tic(w *World) {
 	this.currentAction.tic()
 	if this.currentAction.complete() {
-		fmt.Println(this)
-		this.currentTask = this.thinker.think(&this, w)
+		fmt.Println("I'm at ", this.Position)
+		this.currentTask = this.thinker.think(this, w)
 		this.currentAction = this.currentTask.getAction()
 	}
 }
@@ -33,7 +32,7 @@ func (this BasicUnit) tic(w *World) {
 func makeWorm(where Point) Actor {
 	m := new(RandomWalker)
 	m.Speed = 100
-	return BasicUnit{
+	worm := BasicUnit{
 		"Wormy the Worm",
 		"Worm",
 		makeWaitAction(1),
@@ -42,4 +41,5 @@ func makeWorm(where Point) Actor {
 		new(BasicThinker),
 		m,
 	}
+	return &worm
 }
