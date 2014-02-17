@@ -40,7 +40,7 @@ func (this DesireQueue) next() Desire {
 	return this.queue[0]
 }
 
-func makeDesireQueue() {
+func makeDesireQueue() DesireQueue {
 	return DesireQueue{
 		make([]Desire, 0),
 		func(d Desire) int { return 0 },

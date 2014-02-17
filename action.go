@@ -9,13 +9,21 @@ type Actor interface {
 	tic(*World)
 }
 
-type Action struct {
-	delay    int
-	complete func()
+type Action interface {
+	complete()
+}
+
+type BasicAction struct {
+	delay      int
+	fnComplete func()
+}
+
+func (this BasicAction) complete() {
+	this.fnComplete()
 }
 
 func makeWaitAction(duration int) Action {
-	return Action{
+	return BasicAction{
 		duration,
 		func() {},
 	}

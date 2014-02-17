@@ -1,11 +1,11 @@
 package antfarm
 
 type Thinker interface {
-	think(*Unit) Task
+	think(*BasicUnit) Task
 }
 
 type BasicThinker struct{}
 
-func (this BasicThinker) think(u *Unit) Task {
-	return u.mover.MoveTo(u, Point{0, 0})
+func (this BasicThinker) think(u *BasicUnit) Task {
+	return u.mover.moveTo(u, Point{0, 0})
 }

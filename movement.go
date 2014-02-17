@@ -2,52 +2,57 @@ package antfarm
 
 import "math/rand"
 
+var (
+	NORTH   = Point{0, 1}
+	SOUTH   = Point{0, -1}
+	EAST    = Point{1, 0}
+	WEST    = Point{-1, 0}
+	NOWHERE = Point{0, 0}
+)
+
 type Mover interface {
 	move(*Unit, Point)
 	moveTo(*Unit, Point) Task
 }
 
-type RandomWalker interface{}
-
-func (this RandomWalker) move(u *Unit, vector Point) {
-	u
+type RandomWalker struct {
+	Speed int
 }
 
-func (this RandomWalker) moveTo(u *Unit, p Point) Task {
+func (this RandomWalker) move(u *BasicUnit, vector Point) {
+	u.Position.add(vector)
+}
+
+func (this RandomWalker) moveTo(u *BasicUnit, p Point) Task {
 	return BasicTask{
 		func() bool {
 			return u.Position.equals(p)
 		},
 		func() Action {
+			fn := func() {}
 			i := rand.Intn(4)
 			switch i {
 			case 0:
-				return func() {
-					u.move(NORTH)
+				fn = func() {
+					this.move(u, NORTH)
 				}
 			case 1:
-				return func() {
-					u.move(SOUTH)
+				fn = func() {
+					this.move(u, SOUTH)
 				}
 			case 2:
-				return func() {
-					u.move(EAST)
+				fn = func() {
+					this.move(u, EAST)
 				}
 			case 3:
-				return func() {
-					u.move(WEST)
+				fn = func() {
+					this.move(u, WEST)
 				}
+			}
+			return BasicAction{
+				this.Speed,
+				fn,
 			}
 		},
 	}
 }
-
-type Speed struct {
-	Walk   int
-	Run    int
-	Sprint int
-}
-
-func (this *Unit) makeWalkAction(direction Point) {}
-
-func (this *Unit) makeRunAction(direction Point) {}

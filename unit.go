@@ -8,10 +8,10 @@ type Unit interface {
 type BasicUnit struct {
 	Name          string
 	Species       string
-	currentAction Action
+	currentAction BasicAction
 	Position      Point
-	thinker       Thinker
-	mover         Mover
+	thinker       *BasicThinker
+	mover         *RandomWalker
 }
 
 func (this BasicUnit) tic() {}
