@@ -24,3 +24,5 @@ func makeDummyTask() Task {
 		func() Action { return makeWaitAction(1) },
 	}
 }
+
+var NO_TASK = makeDummyTask()
