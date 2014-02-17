@@ -17,3 +17,10 @@ func (this BasicTask) complete() bool {
 func (this BasicTask) getAction() Action {
 	return this.fnGet()
 }
+
+func makeDummyTask() Task {
+	return BasicTask{
+		func() bool { return true },
+		func() Action { return makeWaitAction(1) },
+	}
+}
