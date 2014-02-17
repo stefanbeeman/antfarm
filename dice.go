@@ -24,7 +24,7 @@ func countHits(rolls []int) int {
 
 func countOnes(rolls []int) int {
 	return count(rolls, func(roll int) bool {
-		return roll < 1
+		return roll <= 1
 	})
 }
 
