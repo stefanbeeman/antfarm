@@ -31,7 +31,7 @@ func (this *BasicUnit) tic(w *World) {
 
 func makeWorm(where Point) Actor {
 	m := new(RandomWalker)
-	m.Speed = 100
+	m.Speed = 8
 	worm := BasicUnit{
 		"Wormy the Worm",
 		"Worm",

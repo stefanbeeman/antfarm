@@ -7,7 +7,7 @@ type World struct {
 	Now       int
 	Materials []Material
 	Actors    []Actor
-	Pacemaker *time.Ticker
+	pacemaker *time.Ticker
 }
 
 func (this *World) tic() {
@@ -18,7 +18,7 @@ func (this *World) tic() {
 }
 
 func (this *World) Start() {
-	for t := range this.Pacemaker.C {
+	for t := range this.pacemaker.C {
 		_ = t
 		this.tic()
 	}
@@ -29,7 +29,7 @@ func (this *World) Sleep() {
 }
 
 func (this *World) Stop() {
-	this.Pacemaker.Stop()
+	this.pacemaker.Stop()
 }
 
 func (this *World) RunFor(tics int) {

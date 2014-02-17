@@ -1,8 +1,8 @@
 package antfarm
 
 const (
-	SIMPLE  int = 1500
-	COMPLEX int = 3000
+	SIMPLE  int = 15
+	COMPLEX int = 30
 )
 
 type Action interface {
