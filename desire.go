@@ -39,3 +39,10 @@ func (this *DesireQueue) decide() Desire {
 func (this DesireQueue) next() Desire {
 	return this.queue[0]
 }
+
+func makeDesireQueue() {
+	return DesireQueue{
+		make([]Desire, 0),
+		func(d Desire) int { return 0 },
+	}
+}

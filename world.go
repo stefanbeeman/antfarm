@@ -8,13 +8,13 @@ type World struct {
 	Grid2D
 	Now       int
 	Materials []Material
-	Units     []Unit
+	Actors    []Unit
 }
 
 func (this *World) tic() {
 	this.Now++
-	for _, unit := range this.Units {
-		unit.tic(this)
+	for _, actor := range this.Actors {
+		actor.tic(this)
 	}
 }
 
@@ -26,7 +26,7 @@ func (this World) Run(tics int) {
 }
 
 func (this *World) addUnit(a Unit) {
-	this.Units = append(this.Units, a)
+	this.Actors = append(this.Actors, a)
 }
 
 func MakeWorld(data string, width int, height int, worms int) World {

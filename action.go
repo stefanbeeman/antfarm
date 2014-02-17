@@ -5,18 +5,18 @@ const (
 	COMPLEX int = 3000
 )
 
+type Actor interface {
+	tic(*World)
+}
+
 type Action struct {
 	delay    int
 	complete func()
 }
 
-func (this Unit) generateWaitAction(duration int) Action {
+func makeWaitAction(duration int) Action {
 	return Action{
 		duration,
 		func() {},
 	}
-}
-
-func (this Unit) ready() bool {
-	return this.currentAction.delay <= 1
 }

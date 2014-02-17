@@ -15,6 +15,10 @@ type Point struct {
 	Y int
 }
 
+func (this Point) equals(that Point) bool {
+	return (this.X == that.X) && (this.Y == that.Y)
+}
+
 func (this Point) add(that Point) Point {
 	return Point{this.X + that.X, this.Y + that.Y}
 }
