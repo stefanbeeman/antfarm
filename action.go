@@ -1,7 +1,5 @@
 package antfarm
 
-import "fmt"
-
 const (
 	SIMPLE  int = 1500
 	COMPLEX int = 3000
