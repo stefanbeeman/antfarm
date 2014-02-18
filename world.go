@@ -1,8 +1,20 @@
 package antfarm
 
-import "time"
+import (
+	"strconv"
+	"time"
+)
 
-type World struct {
+type World interface {
+	tic()
+	Start()
+	Sleep(int)
+	Stop()
+	RunFor(int)
+	addActor(Actor)
+}
+
+type BasicWorld struct {
 	Grid2D
 	Now       int
 	Materials []Material
@@ -10,35 +22,36 @@ type World struct {
 	pacemaker *time.Ticker
 }
 
-func (this *World) tic() {
+func (this *BasicWorld) tic() {
 	this.Now++
 	for _, actor := range this.Actors {
 		actor.tic(this)
 	}
 }
 
-func (this *World) Start() {
+func (this *BasicWorld) Start() {
 	for t := range this.pacemaker.C {
 		_ = t
 		this.tic()
 	}
 }
 
-func (this *World) Sleep() {
-	time.Sleep(time.Millisecond * 1000)
+func (this *BasicWorld) Sleep(tics int) {
+	duration, _ := time.ParseDuration(strconv.Itoa(tics*100) + "ms")
+	time.Sleep(duration)
 }
 
-func (this *World) Stop() {
+func (this *BasicWorld) Stop() {
 	this.pacemaker.Stop()
 }
 
-func (this *World) RunFor(tics int) {
+func (this *BasicWorld) RunFor(tics int) {
 	for i := 0; i < tics; i++ {
 		this.tic()
 	}
 }
 
-func (this *World) addActor(a Actor) {
+func (this *BasicWorld) addActor(a Actor) {
 	this.Actors = append(this.Actors, a)
 }
 
@@ -47,7 +60,7 @@ func MakeWorld(data string, width int, height int, worms int) World {
 	m := LoadMaterials(data)
 	u := make([]Actor, 0)
 	pm := time.NewTicker(time.Millisecond * 100)
-	w := World{g, 0, m, u, pm}
+	w := BasicWorld{g, 0, m, u, pm}
 
 	for y, row := range w.Cells {
 		for x, _ := range row {
@@ -65,5 +78,5 @@ func MakeWorld(data string, width int, height int, worms int) World {
 		a := makeWorm(rp)
 		w.addActor(a)
 	}
-	return w
+	return &w
 }

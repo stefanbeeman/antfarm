@@ -3,7 +3,7 @@ package antfarm
 import "fmt"
 
 type Actor interface {
-	tic(*World)
+	tic(World)
 }
 
 type Unit interface {
@@ -20,7 +20,7 @@ type BasicUnit struct {
 	mover         Mover
 }
 
-func (this *BasicUnit) tic(w *World) {
+func (this *BasicUnit) tic(w World) {
 	this.currentAction.tic()
 
 	if this.currentAction.complete() {
