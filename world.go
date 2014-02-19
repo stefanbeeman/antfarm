@@ -65,9 +65,9 @@ func MakeWorld(data string, width int, height int, worms int) World {
 	for y, row := range w.Cells {
 		for x, _ := range row {
 			p := Point{x, y}
-			c := makeCell(p)
+			c := makeCell(p, w.Materials[0], false)
 			if x == 0 || y == 0 || x == (width-1) || y == (height-1) {
-				c.set("solid", 1)
+				c.setSolid(true)
 			}
 			w.set(p, c)
 		}

@@ -1,44 +1,70 @@
 package antfarm
 
-import "strconv"
+import (
+	"fmt"
+)
 
-type Cell struct {
+type Cell interface {
+	where() Point
+	getMat() Material
+	setMat(Material)
+	getSolid() bool
+	setSolid(bool)
+	getData(string) int
+	setData(string, int)
+	show()
+	showData(string)
+}
+
+type BasicCell struct {
 	location Point
+	Material Material
+	Solid    bool
 	Data     map[string]int
 }
 
-func (c Cell) place(p Point) Cell {
-	c.location = p
-	return c
+func (this BasicCell) where() Point {
+	return this.location
 }
 
-func (c Cell) where() Point {
-	return c.location
+func (this BasicCell) getMat() Material {
+	return this.Material
 }
 
-func (c Cell) get(prop string) int {
-	return c.Data[prop]
+func (this BasicCell) setMat(mat Material) {
+	this.Material = mat
 }
 
-func (c Cell) set(prop string, value int) {
-	c.Data[prop] = value
+func (this BasicCell) getSolid() bool {
+	return this.Solid
 }
 
-func (c Cell) show() string {
-	return "#"
+func (this BasicCell) setSolid(state bool) {
+	this.Solid = state
 }
 
-func (c Cell) showData(prop string) string {
-	data := c.get(prop)
-	return strconv.Itoa(data)
+func (this BasicCell) getData(prop string) int {
+	return this.Data[prop]
 }
 
-func makeCell(p Point) Cell {
-	c := Cell{
+func (this BasicCell) setData(prop string, value int) {
+	this.Data[prop] = value
+}
+
+func (this BasicCell) show() {
+	fmt.Print(this.Material.getGlyph())
+}
+
+func (this BasicCell) showData(prop string) {
+	fmt.Print(this.getData(prop))
+}
+
+func makeCell(p Point, mat Material, solid bool) Cell {
+	c := BasicCell{
 		p,
+		mat,
+		solid,
 		make(map[string]int),
 	}
-	c.set("material", 0)
-	c.set("solid", 0)
-	return c
+	return &c
 }

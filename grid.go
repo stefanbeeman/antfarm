@@ -150,29 +150,27 @@ func (g Grid2D) randomCurved(curve int) Point {
 
 func (g Grid2D) show() {
 	for y := 0; y < g.height(); y++ {
-		line := ""
 		for x := 0; x < g.width(); x++ {
 			c := g.get(Point{x, y})
-			line = line + "[" + c.show() + "]"
-			if x < (g.width() - 1) {
-				line = line + " "
+			c.show()
+			fmt.Print(" ")
+			if x == (g.width() - 1) {
+				fmt.Print("\n")
 			}
 		}
-		fmt.Println(line)
 	}
 }
 
 func (g Grid2D) showData(layer string) {
 	for y := 0; y < g.height(); y++ {
-		line := ""
 		for x := 0; x < g.width(); x++ {
 			c := g.get(Point{x, y})
-			line = line + "[" + c.showData(layer) + "]"
-			if x < (g.width() - 1) {
-				line = line + " "
+			c.showData(layer)
+			fmt.Print(" ")
+			if x == (g.width() - 1) {
+				fmt.Print("\n")
 			}
 		}
-		fmt.Println(line)
 	}
 }
 
@@ -181,8 +179,7 @@ func makeGrid2D(width int, height int) Grid2D {
 	for y := 0; y < height; y++ {
 		g.Cells[y] = make([]Cell, width)
 		for x := 0; x < width; x++ {
-			l := Point{x, y}
-			g.Cells[y][x] = makeCell(l)
+			g.Cells[y][x] = new(BasicCell)
 		}
 	}
 	return g
