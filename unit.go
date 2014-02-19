@@ -1,4 +1,4 @@
-package antfarm
+package af
 
 import "fmt"
 

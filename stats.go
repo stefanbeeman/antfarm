@@ -1,4 +1,4 @@
-package antfarm
+package af
 
 var STAT_ADJ = [12]string{"pitiable", "poor", "mediocre", "average", "good", "great", "superb", "heroic", "fantastic", "epic", "legendary", "mythic"}
 var STAT_XP = [12]int{2, 10, 25, 45, 70, 100, 135, 175, 220, 270, 325, 385}

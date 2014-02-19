@@ -1,3 +1,3 @@
-package antfarm
+package af
 
 type Mask []Point
