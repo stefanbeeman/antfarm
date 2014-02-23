@@ -1,7 +1,6 @@
 package af
 
 // The base eight stats.
-
 type stat int
 
 const (
@@ -15,9 +14,9 @@ const (
 	CHA = 7
 )
 
+// The three limits
 type limit int
 
-// The three limits.
 const (
 	PHYSICAL = 0
 	MENTAL   = 1

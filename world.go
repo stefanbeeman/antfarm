@@ -56,8 +56,9 @@ func (this *BasicWorld) addActor(a Actor) {
 }
 
 func MakeWorld(data string, width int, height int, worms int) World {
+	yml.setRoot(data)
 	g := makeGrid2D(width, height)
-	m := LoadMaterials(data)
+	m := yml.loadMaterials()
 	u := make([]Actor, 0)
 	pm := time.NewTicker(time.Millisecond * 100)
 	w := BasicWorld{g, 0, m, u, pm}
