@@ -54,15 +54,4 @@ func (this dice) rollDice(dice int, limit int) (int, bool) {
 	return hits, glitch
 }
 
-// func (this dice) successTest(dice int, limit int, threshold int) (bool, bool) {
-//  hits, glitch := this.rollDice(dice, limit)
-//  return (hits >= threshold), glitch
-// }
-
-// func (this dice) opposedTest(myDice int, myLimit int, yourDice int, yourLimit int) (int, bool, bool) {
-//  myHits, myGlitch := this.rollDice(myDice, myLimit)
-//  yourHits, yourGlitch := this.rollDice(yourDice, yourLimit)
-//  return (myHits - yourHits), myGlitch, yourGlitch
-// }
-
 var afd = dice{}
