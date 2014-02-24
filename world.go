@@ -17,7 +17,8 @@ type World interface {
 type BasicWorld struct {
 	Grid2D
 	Now       int
-	Materials []Material
+	Materials map[string]Material
+	Skills    map[string]Skill
 	Actors    []Actor
 	pacemaker *time.Ticker
 }
@@ -57,27 +58,28 @@ func (this *BasicWorld) addActor(a Actor) {
 
 func MakeWorld(data string, width int, height int, worms int) World {
 	yml.setRoot(data)
-	g := makeGrid2D(width, height)
-	m := yml.loadMaterials()
-	u := make([]Actor, 0)
+	grid := makeGrid2D(width, height)
+	mats := yml.loadMaterials()
+	skills := yml.loadSkills()
+	units := make([]Actor, 0)
 	pm := time.NewTicker(time.Millisecond * 100)
-	w := BasicWorld{g, 0, m, u, pm}
+	world := BasicWorld{grid, 0, mats, skills, units, pm}
 
-	for y, row := range w.Cells {
+	for y, row := range world.Cells {
 		for x, _ := range row {
 			p := Point{x, y}
-			c := makeCell(p, w.Materials[0], false)
+			c := makeCell(p, world.Materials["rock"], false)
 			if x == 0 || y == 0 || x == (width-1) || y == (height-1) {
 				c.setSolid(true)
 			}
-			w.set(p, c)
+			world.set(p, c)
 		}
 	}
 
 	for n := 0; n < worms; n++ {
-		rp := w.random()
+		rp := world.random()
 		a := makeWorm(rp)
-		w.addActor(a)
+		world.addActor(a)
 	}
-	return &w
+	return &world
 }

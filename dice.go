@@ -2,13 +2,28 @@ package af
 
 import "math/rand"
 
-type dice struct{}
+type DiceRoller interface {
+	d6() int
+	d10() int
+	rollDice(int, int) (int, bool)
+}
 
-func (this dice) d6() int {
+type BasicDiceRoller struct{}
+
+func (this BasicDiceRoller) d6() int {
 	return (rand.Intn(6) + 1)
 }
 
-func (this dice) count(rolls []int, fn func(int) bool) int {
+func (this BasicDiceRoller) d10() int {
+	die := (rand.Intn(10) + 1)
+	if die == 10 {
+		return die + this.d10()
+	} else {
+		return die
+	}
+}
+
+func (this BasicDiceRoller) count(rolls []int, fn func(int) bool) int {
 	total := 0
 	for roll := range rolls {
 		if fn(roll) {
@@ -18,40 +33,32 @@ func (this dice) count(rolls []int, fn func(int) bool) int {
 	return total
 }
 
-func (this dice) countHits(rolls []int) int {
+func (this BasicDiceRoller) countHits(rolls []int, tn int) int {
 	return this.count(rolls, func(roll int) bool {
-		return roll > 4
+		return roll >= tn
 	})
 }
 
-func (this dice) countOnes(rolls []int) int {
+func (this BasicDiceRoller) countGlitches(rolls []int) int {
 	return this.count(rolls, func(roll int) bool {
-		return roll <= 1
+		return roll <= 2
 	})
 }
 
-func (this dice) isGlitch(rolls []int) bool {
+func (this BasicDiceRoller) isGlitch(rolls []int) bool {
 	dice := len(rolls)
-	ones := this.countOnes(rolls)
-	return ones >= (dice / 2)
+	glitches := this.countGlitches(rolls)
+	return glitches >= (dice / 2)
 }
 
-func (this dice) applyLimit(hits int, limit int) int {
-	if hits > limit {
-		return limit
-	} else {
-		return hits
-	}
-}
-
-func (this dice) rollDice(dice int, limit int) (int, bool) {
-	rolls := make([]int, dice)
+func (this BasicDiceRoller) rollDice(BasicDiceRoller int, tn int) (int, bool) {
+	rolls := make([]int, BasicDiceRoller)
 	for i := range rolls {
-		rolls[i] = this.d6()
+		rolls[i] = this.d10()
 	}
-	hits := this.applyLimit(this.countHits(rolls), limit)
+	hits := this.countHits(rolls, tn)
 	glitch := this.isGlitch(rolls)
 	return hits, glitch
 }
 
-var afd = dice{}
+var dice = BasicDiceRoller{}
