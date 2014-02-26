@@ -9,6 +9,11 @@ type Desire struct {
 	noun interface{}
 }
 
+type DesirePoint struct {
+	Position Point
+	Weight float64
+}
+
 type DesireQueue struct {
 	queue []Desire
 	weigh func(Desire) int

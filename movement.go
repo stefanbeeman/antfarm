@@ -14,28 +14,33 @@ var (
 )
 
 type Mover interface {
-	moveTo(*BasicUnit, Point) func() Action
+	moveTo(*BasicUnit, []DesirePoint) func() Action
 }
 
 type AStarWalker struct{}
 
-func (this AStarWalker) moveTo(u *BasicUnit, d Point) func() Action {
+func (this AStarWalker) moveTo(u *BasicUnit, objectives []DesirePoint) func() Action {
 	closedSet := make(map[Point]Point)
 	q := MakePositionHeap()
 
 	q.Push(u.Position, 0)
 	closedSet[u.Position] = u.Position
 	done := false
+  destination := u.Position
 
 	for !done && q.Size() > 0 {
 		c, dist := q.Pop()
-		if c == d {
-			done = true
-		} else {
+    for _, d := range objectives {
+      if c == d.Position {
+        done = true
+        destination = d.Position
+      }
+    }
+    if !done {
 			for _, n := range getNEWS(c) {
 				cost, moveable := u.moveCost(n)
 				if _, exists := closedSet[n]; !exists && moveable {
-					weight := h(d, n) + dist + cost
+					weight := h(n, objectives) + dist + cost
 					q.Push(n, weight)
 					closedSet[n] = c
 				}
@@ -49,7 +54,7 @@ func (this AStarWalker) moveTo(u *BasicUnit, d Point) func() Action {
 		return nil
 	}
 
-	b := d
+	b := destination
 	result := []Point{}
 	for b != u.Position {
 		result = append(result, b)
@@ -68,8 +73,13 @@ func (this AStarWalker) moveTo(u *BasicUnit, d Point) func() Action {
 	}
 }
 
-func h(p1, p2 Point) float64 {
-	return p1.distanceTo(p2)
+func h(p Point, objectives []DesirePoint) float64 {
+  result, weightSum := float64(0), float64(0)
+  for _, d := range objectives {
+    result += d.Weight * p.distanceTo(d.Position)
+    weightSum += d.Weight
+  }
+	return result/weightSum
 }
 
 func getNEWS(p Point) [4]Point {
