@@ -12,6 +12,7 @@ type World interface {
 	Stop()
 	RunFor(int)
 	addActor(Actor)
+	get(Point) Cell
 }
 
 type BasicWorld struct {

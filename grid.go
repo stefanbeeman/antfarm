@@ -24,9 +24,9 @@ func (this Point) add(that Point) Point {
 }
 
 func (here Point) distanceTo(there Point) float64 {
-	x := math.Pow(float64(there.X)-float64(here.X), 2)
-	y := math.Pow(float64(there.Y)-float64(here.Y), 2)
-	return math.Sqrt(x + y)
+	x := math.Abs(float64(here.X - there.X))
+	y := math.Abs(float64(here.Y - there.Y))
+	return (x + y)
 }
 
 func (this Point) vectorTo(that Point) Point {
