@@ -78,7 +78,7 @@ func MakeWorld(data string, width int, height int, worms int) World {
 
 	for n := 0; n < worms; n++ {
 		rp := world.random()
-		a := makeWorm(rp)
+		a := makeWorm(rp, &world)
 		world.addActor(a)
 	}
 	return &world

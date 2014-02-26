@@ -18,6 +18,7 @@ type BasicUnit struct {
 	Position      Point
 	thinker       *BasicThinker
 	mover         Mover
+	memory        World
 }
 
 func (this *BasicUnit) tic(w World) {
@@ -36,7 +37,7 @@ func (this BasicUnit) moveCost(p Point) (float64, bool) {
 	return 1, true
 }
 
-func makeWorm(where Point) Actor {
+func makeWorm(where Point, w World) Actor {
 	m := new(AStarWalker)
 	worm := BasicUnit{
 		"Wormy the Worm",
@@ -46,6 +47,7 @@ func makeWorm(where Point) Actor {
 		where,
 		new(BasicThinker),
 		m,
+		w,
 	}
 	return &worm
 }

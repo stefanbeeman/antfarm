@@ -20,7 +20,7 @@ func (this *YmlLoader) setRoot(path string) {
 }
 
 func (this YmlLoader) load(path string, pointer interface{}) {
-	console.meh("Loading " + path + "...")
+	console.meh("Loading " + path)
 	buffer, readErr := ioutil.ReadFile(path)
 	if readErr != nil {
 		console.broke(readErr)
