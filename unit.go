@@ -34,8 +34,12 @@ func (this *BasicUnit) tic(w World) {
 }
 
 func (this BasicUnit) moveCost(p Point) (float64, bool) {
-	solid := this.memory.get(p).getSolid()
-	return 1, !solid
+	if this.memory.contains(p) {
+		solid := this.memory.get(p).getSolid()
+		return 1, !solid
+	} else {
+		return -1, false
+	}
 }
 
 func makeWorm(where Point, w World) Actor {

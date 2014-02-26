@@ -13,6 +13,8 @@ type World interface {
 	RunFor(int)
 	addActor(Actor)
 	get(Point) Cell
+	contains(Point) bool
+	random() Point
 }
 
 type BasicWorld struct {
