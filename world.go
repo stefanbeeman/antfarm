@@ -74,6 +74,8 @@ func MakeWorld(data string, width int, height int, worms int) World {
 			c := makeCell(p, world.Materials["rock"], false)
 			if x == 0 || y == 0 || x == (width-1) || y == (height-1) {
 				c.setSolid(true)
+			} else if x == (width/2) && y == (height/2) {
+				c.setSolid(true)
 			}
 			world.set(p, c)
 		}
