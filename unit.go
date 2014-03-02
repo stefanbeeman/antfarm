@@ -25,16 +25,16 @@ type BasicUnit struct {
 func (this *BasicUnit) memory() WorldState { return this.state }
 func (this *BasicUnit) SetAction(a Action) { this.action = a }
 
-func (this *BasicUnit) MovementCost(l Location) (int, bool) {
-	cell := this.memory().GetCell(l)
-	return 10, cell.getSolid()
-}
-
 func (this *BasicUnit) tic(w WorldState) {
 	if this.action.complete() {
 		this.Think(this)
 	}
 	this.action.tic()
+}
+
+func (this *BasicUnit) MovementCost(l Location) (int, bool) {
+  cell := this.memory().GetCell(l)
+  return 10, cell.getSolid()
 }
 
 

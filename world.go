@@ -11,7 +11,7 @@ type BasicWorld struct {
 }
 
 func (this BasicWorld) GetCell(l Location) Cell {
-  x,y := l.coords()
+  x, y := l.coords()
 	return this.grid.get(x,y)
 }
 
