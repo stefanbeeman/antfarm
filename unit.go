@@ -33,8 +33,12 @@ func (this *BasicUnit) tic(w WorldState) {
 }
 
 func (this *BasicUnit) MovementCost(l Location) (int, bool) {
-  cell := this.memory().GetCell(l)
-  return 10, cell.getSolid()
+	if this.memory().Contains(l) {
+	  cell := this.memory().GetCell(l)
+	  return 10, cell.getSolid()
+	} else {
+		return 0, true
+	}
 }
 
 

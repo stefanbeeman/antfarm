@@ -58,7 +58,7 @@ func (this *AStarQueue) Push(x interface{}) {
 	this.q = append( this.q, x.(PathStep) )
 }
 
-func (this AStarQueue) Pop() interface{} {
+func (this *AStarQueue) Pop() interface{} {
 	old := this.q
 	n := len(old)
 	x := old[n-1]

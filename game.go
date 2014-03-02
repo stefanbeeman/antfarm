@@ -79,7 +79,7 @@ func MakeGame(data string, width int, height int, pop int) Game {
 
 	for pop > 0 {
 		pop--
-		myUnit := MakeUnit(Point{0, 0}, Point{width - 1, height - 1}, world)
+		myUnit := MakeUnit(Point{1, 1}, Point{width - 1, height - 1}, world)
 		Game.addActor(myUnit)
 	}
 

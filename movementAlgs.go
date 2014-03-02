@@ -1,5 +1,7 @@
 package af
 
+import "fmt"
+
 type MovementAlg interface {
   GoalDecider
   Move(Unit) Action
@@ -97,8 +99,9 @@ func (this *AStarAlg) plan(u Unit) bool {
   current := PathStep{start, 0, this.H(start)}
   for !current.At(goal) {
     for _, next := range current.Neighbors() {
-      if cost, traversable := u.MovementCost(next); traversable {
+      if cost, blocked := u.MovementCost(next); !blocked {
         nextStep := current.stepTo(next, cost, this.H(next))
+        fmt.Println(nextStep)
         q.Insert( current, nextStep )
       }
     }

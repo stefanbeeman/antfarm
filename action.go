@@ -1,5 +1,7 @@
 package af
 
+import "fmt"
+
 const (
 	SIMPLE  int = 15
 	COMPLEX int = 30
@@ -29,6 +31,7 @@ func (this *BasicAction) tic() {
 func (this *BasicAction) complete() bool { return this.coolDown <= 0 }
 
 func MakeMoveAction(u Unit, l Location, time int) Action {
+	fmt.Println(l)
 	return &BasicAction{0, time, func(){u.SetPosition(l)} }
 }
 
