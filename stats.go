@@ -1,4 +1,4 @@
-package af
+package antfarm
 
 // The shades
 const (

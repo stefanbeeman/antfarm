@@ -1,11 +1,8 @@
-package af
+package antfarm
+
+import . "github.com/stefanbeeman/antfarm/common"
 
 import "fmt"
-
-const (
-	SIMPLE  int = 15
-	COMPLEX int = 30
-)
 
 type Action interface {
 	complete() bool
@@ -19,21 +16,21 @@ type BasicAction struct {
 }
 
 func (this *BasicAction) tic() {
+	if this.warmUp == 0 {
+		this.action()
+	}
+
 	if this.warmUp >= 0 {
 		this.warmUp += -1
 	} else {
 		this.coolDown += -1
-	}
-
-	if this.warmUp == 0 {
-		this.action()
 	}
 }
 
 func (this *BasicAction) complete() bool { return this.coolDown <= 0 }
 
 func MakeMoveAction(u Unit, l Location, time int) Action {
-	fmt.Println("Going to... ", l)
+	fmt.Println("Going to ", l)
 	return &BasicAction{0, time, func(){u.SetPosition(l)} }
 }
 

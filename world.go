@@ -1,4 +1,4 @@
-package af
+package antfarm
 
 type WorldState interface {
 	GetCell(Location) Cell

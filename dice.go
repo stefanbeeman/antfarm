@@ -1,4 +1,4 @@
-package af
+package antfarm
 
 import (
 	"math/rand"

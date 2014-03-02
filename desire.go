@@ -1,4 +1,6 @@
-package af
+package antfarm
+
+import . "github.com/stefanbeeman/antfarm/common"
 
 import "sort"
 

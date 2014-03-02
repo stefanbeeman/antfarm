@@ -1,7 +1,9 @@
-package af
+package antfarm
+
+import . "github.com/stefanbeeman/antfarm/common"
 
 type Actor interface {
-	Location
+	MutableLocation
 	SetAction(Action)
 	tic(WorldState)
 }
@@ -15,7 +17,7 @@ type Unit interface {
 }
 
 type BasicUnit struct {
-	Location
+	MutableLocation
 	Thinker
 	Mover
 	state WorldState
@@ -32,23 +34,13 @@ func (this *BasicUnit) tic(w WorldState) {
 	this.action.tic()
 }
 
-func (this *BasicUnit) MovementCost(l Location) (int, bool) {
-	if this.memory().Contains(l) {
-	  cell := this.memory().GetCell(l)
-	  return 10, cell.getSolid()
-	} else {
-		return 0, true
-	}
-}
-
-
 func MakeUnit(location, target Point, w WorldState) Unit {
 	goal := &BasicGoal{target, 1}
 
 	thinker := &BasicThinker{ []Goal{goal} }
 	mover := &BasicMover{ MakeAStarAlg() }
 	state := &OmniscientMemory{ w }
-	result := &BasicUnit{location, thinker, mover, state, MakeWaitAction(0)}
+	result := &BasicUnit{&location, thinker, mover, state, MakeWaitAction(0)}
 
 	result.Init(result)
 	return result

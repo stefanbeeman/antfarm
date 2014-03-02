@@ -1,14 +1,4 @@
-package af
-
-type Goal interface {
-  Location
-  Weight() int
-}
-
-type BasicGoal struct {
-  Location
-  weight int
-}
+package antfarm
 
 func (this BasicGoal) Weight() int { return this.weight }
 
