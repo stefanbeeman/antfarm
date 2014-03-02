@@ -19,28 +19,7 @@ type ProtoBasicSkill struct {
 func (this ProtoBasicSkill) build() Skill {
 	skill := new(BasicSkill)
 	skill.Name = this.Name
-	switch this.Stat {
-	case "strength":
-		skill.Stat = ST
-	case "agility":
-		skill.Stat = AG
-	case "toughness":
-		skill.Stat = TO
-	case "endurance":
-		skill.Stat = EN
-	case "health":
-		skill.Stat = HT
-	case "reaction":
-		skill.Stat = RE
-	case "willpower":
-		skill.Stat = WP
-	case "logic":
-		skill.Stat = LG
-	case "Intuiton":
-		skill.Stat = IN
-	case "charisma":
-		skill.Stat = CH
-	}
+	skill.Stat = 0
 	skill.Defaults = this.Defaults
 	skill.Title = this.Title
 	skill.Desc = this.Desc
