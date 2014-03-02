@@ -1,5 +1,10 @@
 package af
 
+import (
+  "strconv"
+  "time"
+)
+
 type Game interface {
   tic()
   Start()
@@ -7,13 +12,10 @@ type Game interface {
   Stop()
   RunFor(int)
   addActor(Actor)
-  get(Point) Cell
-  contains(Point) bool
-  random() Point
 }
 
 type BasicGame struct {
-  WorldState
+  World WorldState
   Now       int
   Materials map[string]Material
   Skills    map[string]Skill
@@ -24,7 +26,7 @@ type BasicGame struct {
 func (this *BasicGame) tic() {
   this.Now++
   for _, actor := range this.Actors {
-    actor.tic(this)
+    // actor.tic(this)
   }
 }
 
@@ -57,7 +59,7 @@ func (this *BasicGame) addActor(a Actor) {
 func MakeGame(data string, width int, height int, worms int) Game {
   yml.setRoot(data)
 
-  // NEED WORLD STATE BUILDER
+  world := makeWorld(width, height)
 
   mats := yml.loadMaterials()
   skills := yml.loadSkills()
@@ -65,21 +67,16 @@ func MakeGame(data string, width int, height int, worms int) Game {
   pm := time.NewTicker(time.Millisecond * 100)
   Game := BasicGame{world, 0, mats, skills, units, pm}
 
-  for y, row := range Game.Cells {
-    for x, _ := range row {
-      p := Point{x, y}
-      c := makeCell(p, Game.Materials["rock"], false)
-      if x == 0 || y == 0 || x == (width-1) || y == (height-1) {
-        c.setSolid(true)
-      }
-      Game.set(p, c)
-    }
-  }
+  // for y, row := range Game. {
+  //   for x, _ := range row {
+  //     p := Point{x, y}
+  //     c := makeCell(p, Game.Materials["rock"], false)
+  //     if x == 0 || y == 0 || x == (width-1) || y == (height-1) {
+  //       c.setSolid(true)
+  //     }
+  //     Game.set(p, c)
+  //   }
+  // }
 
-  for n := 0; n < worms; n++ {
-    rp := Game.random()
-    a := makeWorm(rp, &Game)
-    Game.addActor(a)
-  }
   return &Game
 }

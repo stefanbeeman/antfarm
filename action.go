@@ -11,25 +11,19 @@ type Action interface {
 }
 
 type BasicAction struct {
-	currentDelay int
-	fnComplete   func()
+	warmUp int
+	coolDown int
+	action func()
 }
 
-func (this *BasicAction) tic() {
-	this.currentDelay--
-	if this.currentDelay < 1 {
-		this.fnComplete()
+func (this BasicAction) tic() {
+	if this.warmUp > 0 {
+		this.warmUp--
+	} else if this.warmUp == 0 {
+		this.action()
+	} else {
+		this.coolDown--
 	}
 }
 
-func (this BasicAction) complete() bool {
-	return this.currentDelay < 1
-}
-
-func makeWaitAction(duration int) Action {
-	act := BasicAction{
-		duration,
-		func() {},
-	}
-	return &act
-}
+func (this BasicAction) complete() bool { return this.coolDown <= 0 }

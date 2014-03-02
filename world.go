@@ -1,10 +1,5 @@
 package af
 
-import (
-	"strconv"
-	"time"
-)
-
 type WorldState interface {
   GetCell(Location) Cell
   Update(Location, Cell)
@@ -12,7 +7,7 @@ type WorldState interface {
 }
 
 type BasicWorld struct {
-	grid Grid2D
+	grid BasicGrid
 }
 
 func (this BasicWorld) GetCell(l Location) Cell {
@@ -24,6 +19,23 @@ func (this BasicWorld) Update(l Location, newCell Cell) {
 	cell = newCell
 }
 
-func (this BasicWorld) Contains(l Location) {
+func (this BasicWorld) Contains(l Location) bool {
 	return this.grid.contains(l.coords())
+}
+
+func makeWorld(w,h int) BasicWorld {
+	return BasicWorld{
+		makeGrid(w,h),
+	}
+}
+
+func makeGrid(width int, height int) BasicGrid {
+ g := Grid2D{w,h, make([][]Cell, height)}
+ for y := 0; y < height; y++ {
+   g.Cells[y] = make([]Cell, width)
+   for x := 0; x < width; x++ {
+     g.Cells[y][x] = new(BasicCell)
+   }
+ }
+ return g
 }

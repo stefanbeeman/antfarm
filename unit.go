@@ -1,9 +1,8 @@
 package af
 
-import "fmt"
-
 type Actor interface {
-	func SetAction(Action)
+	Location
+	SetAction(Action)
 }
 
 type BasicActor struct {
@@ -18,4 +17,10 @@ type Unit interface {
 	Thinker
 	Mover
 	memory() WorldState
+	MovementCost(Location) (int,bool)
 }
+
+// func (this BasicMover) MovementCost(u, l Location) (int, bool) {
+// 	cell := this.memory().GetCell(l)
+// 	return 10, cell.getSolid()
+// }

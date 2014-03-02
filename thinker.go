@@ -1,13 +1,5 @@
 package af
 
-import (
-	"fmt"
-)
-
-type Action interface {}
-
-type BasicAction struct {}
-
 type Goal interface {
   Location
   Weight() int

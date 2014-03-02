@@ -2,7 +2,7 @@ package af
 
 type Skill interface {
 	getName() string
-	getStat() stat
+	getStat() int
 	getDefaults() map[string]int
 	getTitle() string
 	getDesc() string
@@ -49,7 +49,7 @@ func (this ProtoBasicSkill) build() Skill {
 
 type BasicSkill struct {
 	Name     string
-	Stat     stat
+	Stat     int
 	Defaults map[string]int
 	Title    string
 	Desc     string
