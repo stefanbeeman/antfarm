@@ -1,58 +1,5 @@
 package rpg
 
-// The shades
-const (
-	BLACK = -1
-	GRAY  = 0
-	WHITE = 1
-)
-
-// The stats
-const (
-	AGL = 0 // Agility
-	END = 1 // Endurance
-	HLT = 2 // Health
-	REA = 3 // Reaction
-	STR = 4 // Strength
-	CHA = 5 // Charisma
-	INT = 6 // Intuition
-	LOG = 7 // Logic
-	PER = 8 // Perception
-	WIL = 9 // Willpower
-)
-
-// XP multiplier needed to advance a stat
-const (
-	STATXP = 5
-)
-
-func parseStat(s string) int {
-	switch s {
-	case "AGL":
-		return 0
-	case "END":
-		return 1
-	case "HLT":
-		return 2
-	case "REA":
-		return 3
-	case "STR":
-		return 4
-	case "CHA":
-		return 5
-	case "INT":
-		return 6
-	case "LOG":
-		return 7
-	case "PER":
-		return 8
-	case "WIL":
-		return 9
-	default:
-		return 0
-	}
-}
-
 type Stat interface {
 	get() (int, int)
 	getBase() int
@@ -137,5 +84,124 @@ func (this *BasicStat) awardXP(value int) {
 			this.Base += 1
 			this.XP = 0
 		}
+	}
+}
+
+type Statted interface {
+	GetStat(int) (int, int)
+	GetStats([]int) (int, int)
+	SetStatMod(int, string, int)
+	ClearStatMod(int, string)
+	ResetStatMods(int)
+	AwardStatXP(int, int)
+	TestStat(int) int
+	TestStats([]int) int
+}
+
+type BasicStatted struct {
+	Agility    Stat
+	Endurance  Stat
+	Health     Stat
+	Reaction   Stat
+	Strength   Stat
+	Charisma   Stat
+	Intuition  Stat
+	Logic      Stat
+	Perception Stat
+	Willpower  Stat
+}
+
+func (this BasicStatted) dispatch(which int) Stat {
+	switch which {
+	case AGL:
+		return this.Agility
+	case END:
+		return this.Endurance
+	case HLT:
+		return this.Health
+	case REA:
+		return this.Reaction
+	case STR:
+		return this.Strength
+	case CHA:
+		return this.Charisma
+	case INT:
+		return this.Intuition
+	case LOG:
+		return this.Logic
+	case PER:
+		return this.Perception
+	case WP:
+		return this.Willpower
+	default:
+		return nil
+	}
+}
+
+func (this BasicStatted) GetStat(which int) (int, int) {
+	return this.dispatch(which).get()
+}
+
+func (this BasicStatted) GetStats(which []int) (int, int) {
+	value := 0
+	shade := -1
+	for _, i := range which {
+		statValue, statShade = this.GetStat(i)
+		value += statValue
+		if statShade > shade {
+			shade = statShade
+		}
+	}
+	value = value / len(which)
+	return value, shade
+}
+
+func (this BasicStatted) GetStatShade(which int) int {
+	return this.dispatch(which).getShade()
+}
+
+func (this *BasicStatted) SetStatMod(which int, mod string, value int) {
+	this.dispatch(which).setMod(mod, value)
+}
+
+func (this *BasicStatted) ClearStatMod(which int, mod string) {
+	this.dispatch(which).clearMod(mod)
+}
+
+func (this *BasicStatted) ResetStatMods(which int, mod string) {
+	this.dispatch(which).resetMods(mod)
+}
+
+func (this *BasicStatted) AwardStatXP(which int, award int) {
+	this.dispatch(which).awardXP(award)
+}
+
+func (this *BasicStatted) TestStat(which int) {
+	dice, shade := this.GetStat(which)
+	return Dice.RollDice(dice, 6, shade)
+}
+
+func (this *BasicStatted) TestStats(which int) {
+	dice, shade := this.GetStats(which)
+	return Dice.RollDice(dice, 6, shade)
+}
+
+func MakeStat() Stat {
+	result := BasicStat{4, -1, make(map[string]int), 10, 0}
+	return &result
+}
+
+func MakeStatted() Stat {
+	result := BasicStatted{
+		MakeStat(),
+		MakeStat(),
+		MakeStat(),
+		MakeStat(),
+		MakeStat(),
+		MakeStat(),
+		MakeStat(),
+		MakeStat(),
+		MakeStat(),
+		MakeStat(),
 	}
 }

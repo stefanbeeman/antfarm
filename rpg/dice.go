@@ -5,14 +5,34 @@ import (
 )
 
 type DiceRoller interface {
-	d12() int
-	rollDice(int, int, int) (int, int)
+	DN(int) int
+	NDN(int, int) int
+	D6() int
+	D10() int
+	RollDice(int, int, int) int
 }
 
 type BasicDiceRoller struct{}
 
-func (this BasicDiceRoller) d12() int {
-	return (rand.Intn(12) + 1)
+func (this BasicDiceRoller) DN(sides int) int {
+	return (rand.Intn(sides) + 1)
+}
+
+func (this BasicDiceRoller) NDN(n int, sides int) int {
+	total := 0
+	for n > 0 {
+		total += this.DN(sides)
+		n--
+	}
+	return total
+}
+
+func (this BasicDiceRoller) D6() {
+	return this.DN(6)
+}
+
+func (this BasicDiceRoller) D10() {
+	return this.DN(10)
 }
 
 func (this BasicDiceRoller) count(rolls []int, fn func(int) bool) int {
@@ -43,7 +63,7 @@ func (this BasicDiceRoller) shadeGrey(rolls []int) []int {
 	})
 	extra := make([]int, 0)
 	for more > 0 {
-		die := this.d12()
+		die := this.D12()
 		extra = append(extra, die)
 		more--
 	}
@@ -56,7 +76,7 @@ func (this BasicDiceRoller) shadeWhite(rolls []int) []int {
 	})
 	extra := make([]int, 0)
 	for more > 0 {
-		die := this.d12()
+		die := this.D12()
 		extra = append(extra, die)
 		more--
 	}
@@ -66,10 +86,10 @@ func (this BasicDiceRoller) shadeWhite(rolls []int) []int {
 	return append(rolls, extra...)
 }
 
-func (this BasicDiceRoller) rollDice(dice int, tn int, shade int) (int, int) {
+func (this BasicDiceRoller) RollDice(dice int, tn int, shade int) int {
 	rolls := make([]int, dice)
 	for i := range rolls {
-		rolls[i] = this.d12()
+		rolls[i] = this.D12()
 	}
 	if shade <= WHITE {
 		rolls = this.shadeWhite(rolls)
@@ -81,4 +101,4 @@ func (this BasicDiceRoller) rollDice(dice int, tn int, shade int) (int, int) {
 	return hits, glitches
 }
 
-var dice = BasicDiceRoller{}
+var Dice = BasicDiceRoller{}

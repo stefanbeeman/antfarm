@@ -45,16 +45,16 @@ func (this YmlLoader) loadMaterials() map[string]storage.Material {
 	return mats
 }
 
-func (this YmlLoader) loadSkills() map[string]Skill {
-	skills := make(map[string]Skill)
-	files, _ := ioutil.ReadDir(this.root + "/skills")
-	for _, file := range files {
-		skill := new(ProtoBasicSkill)
-		path := this.root + "/skills/" + file.Name()
-		this.load(path, skill)
-		skills[skill.Name] = skill.build()
-	}
-	return skills
-}
+// func (this YmlLoader) loadSkills() map[string]Skill {
+// 	skills := make(map[string]Skill)
+// 	files, _ := ioutil.ReadDir(this.root + "/skills")
+// 	for _, file := range files {
+// 		skill := new(ProtoBasicSkill)
+// 		path := this.root + "/skills/" + file.Name()
+// 		this.load(path, skill)
+// 		skills[skill.Name] = skill.build()
+// 	}
+// 	return skills
+// }
 
 var yml = new(YmlLoader)
