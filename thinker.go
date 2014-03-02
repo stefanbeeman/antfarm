@@ -4,44 +4,35 @@ import (
 	"fmt"
 )
 
-const (
-  MAX_WEIGHT int = 1
-)
+type Action interface {}
 
-var DESIRES = map[Point]float64 {
-  Point{1,1}: float64(2),
-  Point{18,18}: float64(2),
-  Point{1,18}: float64(1),
-  Point{18,1}: float64(1),
+type BasicAction struct {}
+
+type Goal interface {
+  Location
+  Weight() int
 }
+
+type BasicGoal struct {
+  Location
+  weight int
+}
+
+func (this BasicGoal) Weight() { return this.weight }
 
 type Thinker interface {
-	think(*BasicUnit, World) Task
+  Init(Unit)
+  Think(Unit)
 }
 
-type BasicThinker struct{}
+type BasicThinker struct{
+  goals []Goal
+}
 
-func (this BasicThinker) think(u *BasicUnit, w World) Task {
-	task := NO_TASK
-	for task.complete() {
-    desiresSlice := []DesirePoint{}
-    for k,v := range DESIRES {
-      desiresSlice = append(desiresSlice, DesirePoint{k, v})
-    }
-		fmt.Println("I'm heading to ", desiresSlice)
-		task = BasicTask{
-			func() bool {
-        for _, d := range desiresSlice {
-          if u.Position.equals(d.Position) {
-            delete(DESIRES, d.Position)
-            return true
-          }
-        }
-				return false
-			},
-			u.mover.moveTo(u, desiresSlice),
-		}
-	}
+func (this BasicThinker) Init(u Unit) {
+  u.AddGoals( this.goals )
+}
 
-	return task
+func (this BasicThinker) Think(u Unit) {
+  u.SetAction( u.Move(u) )
 }
