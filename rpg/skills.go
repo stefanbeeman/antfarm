@@ -1,4 +1,4 @@
-package antfarm
+package rpg
 
 type Skill interface {
 	getName() string

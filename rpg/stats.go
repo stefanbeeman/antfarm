@@ -1,4 +1,4 @@
-package antfarm
+package rpg
 
 // The shades
 const (
