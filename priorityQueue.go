@@ -9,15 +9,15 @@ type AStarQueue struct {
 	closedSet map[Point]Point
 }
 
-func MakeAStarQueue() AStarQueue {
+func MakeAStarQueue() *AStarQueue {
 	closedSet := make(map[Point]Point)
 	q := []PathStep{}
-	result := AStarQueue{q, closedSet}
+	result := &AStarQueue{q, closedSet}
 	heap.Init(result)
 	return result
 }
 
-func (this AStarQueue) Insert(from, to PathStep) bool {
+func (this *AStarQueue) Insert(from, to PathStep) bool {
 	fromPos, toPos := from.AsPoint(), to.AsPoint()
 	if _, seen := this.closedSet[toPos]; !seen {
 		heap.Push(this, to)
@@ -27,15 +27,15 @@ func (this AStarQueue) Insert(from, to PathStep) bool {
 	return false
 }
 
-func (this AStarQueue) Next() PathStep {
+func (this *AStarQueue) Next() PathStep {
 	return heap.Pop(this).(PathStep)
 }
 
-func (this AStarQueue) Close(point Point) {
+func (this *AStarQueue) Close(point Point) {
 	this.closedSet[point] = point
 }
 
-func (this AStarQueue) Rewind(end, start Point) []Point {
+func (this *AStarQueue) Rewind(end, start Point) []Point {
 	result := []Point{}
 	for next := end; !next.At(start); next = this.closedSet[next] {
 		result = append(result, next)
@@ -43,10 +43,10 @@ func (this AStarQueue) Rewind(end, start Point) []Point {
 	return result
 }
 
-func (this AStarQueue) Len() int           { return len(this.q) }
-func (this AStarQueue) Swap(i, j int)      { this.q[i], this.q[j] = this.q[j], this.q[i] }
+func (this *AStarQueue) Len() int           { return len(this.q) }
+func (this *AStarQueue) Swap(i, j int)      { this.q[i], this.q[j] = this.q[j], this.q[i] }
 
-func (this AStarQueue) Less(i, j int) bool {
+func (this *AStarQueue) Less(i, j int) bool {
 	if this.q[i].best == this.q[j].best {
 		return this.q[i].cost < this.q[j].cost
 	} else {
@@ -54,7 +54,7 @@ func (this AStarQueue) Less(i, j int) bool {
 	}
 }
 
-func (this AStarQueue) Push(x interface{}) {
+func (this *AStarQueue) Push(x interface{}) {
 	this.q = append( this.q, x.(PathStep) )
 }
 

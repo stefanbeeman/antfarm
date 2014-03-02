@@ -16,11 +16,11 @@ type BasicGoalDecider struct {
   goals []Goal
 }
 
-func (this BasicGoalDecider) AddGoals(goals []Goal) {
+func (this *BasicGoalDecider) AddGoals(goals []Goal) {
   this.goals = append( this.goals, goals... )
 }
 
-func (this BasicGoalDecider) RemoveGoals(goals []Goal) {
+func (this *BasicGoalDecider) RemoveGoals(goals []Goal) {
   removed := make(map[Goal]bool)
   for _, g := range goals {
     removed[g] = true
@@ -34,15 +34,15 @@ func (this BasicGoalDecider) RemoveGoals(goals []Goal) {
   this.goals = modified
 }
 
-func (this BasicGoalDecider) BestGoal() Goal  {
+func (this *BasicGoalDecider) BestGoal() Goal  {
   return this.goals[0]
 }
 
-func (this BasicGoalDecider) H(p Location) int {
+func (this *BasicGoalDecider) H(p Location) int {
   return p.DistanceTo( this.BestGoal() )
 }
 
-func MakeGoalDecider() GoalDecider { return BasicGoalDecider{[]Goal{}} }
+func MakeGoalDecider() GoalDecider { return &BasicGoalDecider{[]Goal{}} }
 
 
 
@@ -64,18 +64,18 @@ type AStarAlg struct {
   path []Point
 }
 
-func (this AStarAlg) Move(u Unit) Action {
+func (this *AStarAlg) Move(u Unit) Action {
   next, valid := this.nextPlannedStep(u)
   if !valid {
     if !this.plan(u) {
-      return BasicAction{0, 0, func(){}}
+      return MakeWaitAction(0)
     }
     next,_ = this.nextPlannedStep(u)
   }
-  return BasicAction{0, 10, func(){u.SetPosition(next)}}
+  return &BasicAction{0, 10, func(){u.SetPosition(next)}}
 }
 
-func (this AStarAlg) nextPlannedStep(u Unit) (Location, bool) {
+func (this *AStarAlg) nextPlannedStep(u Unit) (Location, bool) {
   l := len(this.path)
   if l > 0 {
     next := this.path[l-1]
@@ -87,7 +87,7 @@ func (this AStarAlg) nextPlannedStep(u Unit) (Location, bool) {
   return Point{}, false
 }
 
-func (this AStarAlg) plan(u Unit) bool {
+func (this *AStarAlg) plan(u Unit) bool {
   start := u.AsPoint()
   goal := u.BestGoal()
 
@@ -112,4 +112,4 @@ func (this AStarAlg) plan(u Unit) bool {
   return true
 }
 
-func MakeAStarAlg() MovementAlg { return AStarAlg{MakeGoalDecider(), []Point{}} }
+func MakeAStarAlg() MovementAlg { return &AStarAlg{MakeGoalDecider(), []Point{}} }

@@ -16,7 +16,7 @@ type BasicAction struct {
 	action func()
 }
 
-func (this BasicAction) tic() {
+func (this *BasicAction) tic() {
 	if this.warmUp > 0 {
 		this.warmUp--
 	} else if this.warmUp == 0 {
@@ -26,8 +26,8 @@ func (this BasicAction) tic() {
 	}
 }
 
-func (this BasicAction) complete() bool { return this.coolDown <= 0 }
+func (this *BasicAction) complete() bool { return this.coolDown <= 0 }
 
 func MakeWaitAction(i int) Action {
-	return BasicAction{0, i, func(){}}
+	return &BasicAction{0, i, func(){}}
 }

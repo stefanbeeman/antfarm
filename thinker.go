@@ -21,10 +21,10 @@ type BasicThinker struct{
   goals []Goal
 }
 
-func (this BasicThinker) Init(u Unit) {
+func (this *BasicThinker) Init(u Unit) {
   u.AddGoals( this.goals )
 }
 
-func (this BasicThinker) Think(u Unit) {
+func (this *BasicThinker) Think(u Unit) {
   u.SetAction( u.Move(u) )
 }
