@@ -2,8 +2,8 @@ package antfarm
 
 import (
 	. "github.com/stefanbeeman/antfarm/common"
-	"github.com/stefanbeeman/antfarm/pathfinding"
 	"github.com/stefanbeeman/antfarm/storage"
+	"github.com/stefanbeeman/antfarm/pathfinding"
 )
 
 type Actor interface {
@@ -17,6 +17,7 @@ type Unit interface {
 	Thinker
 	Mover
 	memory() storage.WorldState
+	Init(storage.WorldState)
 }
 
 type BasicUnit struct {
@@ -37,6 +38,11 @@ func (this *BasicUnit) tic(w storage.WorldState) {
 	this.action.tic()
 }
 
+func (this *BasicUnit) Init(world storage.WorldState) {
+	this.initThinker(this)
+	this.initMover(this, world)
+}
+
 func MakeUnit(location, target Point, w storage.WorldState) Unit {
 	goal := &pathfinding.BasicGoal{target, 1}
 	thinker := &BasicThinker{[]pathfinding.Goal{goal}}
@@ -44,6 +50,6 @@ func MakeUnit(location, target Point, w storage.WorldState) Unit {
 	state := &OmniscientMemory{w}
 	result := &BasicUnit{&location, thinker, mover, state, MakeWaitAction(0)}
 
-	result.Init(result)
+	result.Init(w)
 	return result
 }

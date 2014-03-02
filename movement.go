@@ -9,7 +9,7 @@ import (
 type Mover interface {
 	pathfinding.MovementAlg
 	Move(Unit) Action
-	InitMover(Unit, storage.WorldState)
+	initMover(Unit, storage.WorldState)
 }
 
 func MakeAStarMover() BasicMover {
@@ -35,7 +35,7 @@ func (this *BasicMover) Move(u Unit) Action {
 	return MakeMoveAction(u, next, 10)
 }
 
-func (this *BasicMover) InitMover(u Unit, w storage.WorldState) {
+func (this *BasicMover) initMover(u Unit, w storage.WorldState) {
 	fn := func(l Location) (int, bool) {
 		if !w.Contains(l) {
 			return 0, true

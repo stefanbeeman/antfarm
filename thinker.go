@@ -5,15 +5,15 @@ import (
 )
 
 type Thinker interface {
-	Init(Unit)
 	Think(Unit)
+  initThinker(Unit)
 }
 
 type BasicThinker struct {
 	goals []pathfinding.Goal
 }
 
-func (this *BasicThinker) Init(u Unit) {
+func (this *BasicThinker) initThinker(u Unit) {
 	u.AddGoals(this.goals)
 }
 
