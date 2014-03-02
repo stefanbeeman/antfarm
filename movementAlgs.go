@@ -41,7 +41,7 @@ func (this *BasicGoalDecider) BestGoal() Goal  {
 }
 
 func (this *BasicGoalDecider) H(p Location) int {
-  return p.DistanceTo( this.BestGoal() )
+  return p.DistanceTo( 10*this.BestGoal() )
 }
 
 func MakeGoalDecider() GoalDecider { return &BasicGoalDecider{[]Goal{}} }
@@ -101,7 +101,7 @@ func (this *AStarAlg) plan(u Unit) bool {
     for _, next := range current.Neighbors() {
       if cost, blocked := u.MovementCost(next); !blocked {
         nextStep := current.stepTo(next, cost, this.H(next))
-        fmt.Println(nextStep)
+        fmt.Println(nextStep, goal)
         q.Insert( current, nextStep )
       }
     }
