@@ -27,3 +27,7 @@ func (this BasicAction) tic() {
 }
 
 func (this BasicAction) complete() bool { return this.coolDown <= 0 }
+
+func MakeWaitAction(i int) Action {
+	return BasicAction{0, i, func(){}}
+}

@@ -1,7 +1,7 @@
 package af
 
 type OmniscientMemory struct {
-  world *BasicWorld
+  world WorldState
 }
 
 func (this OmniscientMemory) GetCell(p Location) Cell { return this.world.GetCell(p)}

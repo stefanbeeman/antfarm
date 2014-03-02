@@ -42,6 +42,8 @@ func (this BasicGoalDecider) H(p Location) int {
   return p.DistanceTo( this.BestGoal() )
 }
 
+func MakeGoalDecider() GoalDecider { return BasicGoalDecider{[]Goal{}} }
+
 
 
 type PathStep struct {
@@ -59,7 +61,7 @@ func (this PathStep) stepTo(pos Location, cost, h int) PathStep {
 
 type AStarAlg struct {
   GoalDecider
-  path[] Point
+  path []Point
 }
 
 func (this AStarAlg) Move(u Unit) Action {
@@ -109,3 +111,5 @@ func (this AStarAlg) plan(u Unit) bool {
   this.path = q.Rewind(current.AsPoint(), start)
   return true
 }
+
+func MakeAStarAlg() MovementAlg { return AStarAlg{MakeGoalDecider(), []Point{}} }
