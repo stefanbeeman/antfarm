@@ -2,6 +2,7 @@ package antfarm
 
 import (
 	. "github.com/stefanbeeman/antfarm/common"
+	"github.com/stefanbeeman/antfarm/ai"
 	"github.com/stefanbeeman/antfarm/storage"
 	"strconv"
 	"time"
@@ -13,7 +14,7 @@ type Game interface {
 	Sleep(int)
 	Stop()
 	RunFor(int)
-	addActor(Actor)
+	addActor(ai.Actor)
 }
 
 type BasicGame struct {
@@ -21,14 +22,14 @@ type BasicGame struct {
 	Now       int
 	Materials map[string]storage.Material
 	Skills    map[string]Skill
-	Actors    []Actor
+	Actors    []ai.Actor
 	pacemaker *time.Ticker
 }
 
 func (this *BasicGame) tic() {
 	this.Now++
 	for _, actor := range this.Actors {
-		actor.tic(this.World)
+		actor.Tic(this.World)
 	}
 }
 
@@ -54,7 +55,7 @@ func (this *BasicGame) RunFor(tics int) {
 	}
 }
 
-func (this *BasicGame) addActor(a Actor) {
+func (this *BasicGame) addActor(a ai.Actor) {
 	this.Actors = append(this.Actors, a)
 }
 
@@ -64,7 +65,7 @@ func MakeGame(data string, width int, height int, pop int) Game {
 	mats := yml.loadMaterials()
 	skills := yml.loadSkills()
 	world := storage.MakeWorld(width, height)
-	units := make([]Actor, 0)
+	units := make([]ai.Actor, 0)
 	pm := time.NewTicker(time.Millisecond)
 	Game := BasicGame{world, 0, mats, skills, units, pm}
 
@@ -81,7 +82,7 @@ func MakeGame(data string, width int, height int, pop int) Game {
 
 	for pop > 0 {
 		pop--
-		myUnit := MakeUnit(Point{1, 1}, Point{width - 2, height - 2}, world)
+		myUnit := ai.MakeUnit(Point{1, 1}, Point{width - 2, height - 2}, world)
 		Game.addActor(myUnit)
 	}
 

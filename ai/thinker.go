@@ -1,4 +1,4 @@
-package antfarm
+package ai
 
 import (
 	"github.com/stefanbeeman/antfarm/pathfinding"

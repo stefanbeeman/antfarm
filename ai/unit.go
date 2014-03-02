@@ -1,4 +1,4 @@
-package antfarm
+package ai
 
 import (
 	. "github.com/stefanbeeman/antfarm/common"
@@ -9,7 +9,7 @@ import (
 type Actor interface {
 	MutableLocation
 	SetAction(Action)
-	tic(storage.WorldState)
+	Tic(storage.WorldState)
 }
 
 type Unit interface {
@@ -30,8 +30,7 @@ type BasicUnit struct {
 
 func (this *BasicUnit) memory() Memory { return this.state }
 func (this *BasicUnit) SetAction(a Action) { this.action = a }
-
-func (this *BasicUnit) tic(w storage.WorldState) {
+func (this *BasicUnit) Tic(w storage.WorldState) {
 	if this.action.complete() {
 		this.Think(this)
 	}

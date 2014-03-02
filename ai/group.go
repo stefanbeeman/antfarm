@@ -1,4 +1,4 @@
-package antfarm
+package ai
 
 type Group interface {
 	Turn()
