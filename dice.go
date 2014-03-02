@@ -71,7 +71,7 @@ func (this BasicDiceRoller) rollDice(dice int, tn int, shade int) (int, int) {
 	for i := range rolls {
 		rolls[i] = this.d12()
 	}
-	if shade == WHITE {
+	if shade <= WHITE {
 		rolls = this.shadeWhite(rolls)
 	} else if shade == GRAY {
 		rolls = this.shadeGrey(rolls)
