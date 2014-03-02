@@ -1,7 +1,5 @@
 package af
 
-import "fmt"
-
 type MovementAlg interface {
   GoalDecider
   Move(Unit) Action
@@ -69,7 +67,7 @@ type AStarAlg struct {
 func (this *AStarAlg) Move(u Unit) Action {
   next, valid := this.nextPlannedStep(u)
   if !valid {
-    if !this.plan(u) {
+    if success := this.plan(u); !success {
       return MakeWaitAction(0)
     }
     next,_ = this.nextPlannedStep(u)
@@ -82,7 +80,7 @@ func (this *AStarAlg) nextPlannedStep(u Unit) (Location, bool) {
   if len(this.path) > 0 {
     rest, next := this.path[:l-1], this.path[l-1]
     this.path = rest
-    if _, valid := u.MovementCost(next); valid  {
+    if _, blocked := u.MovementCost(next); !blocked  {
       return next, true
     }
   }
@@ -101,7 +99,6 @@ func (this *AStarAlg) plan(u Unit) bool {
     for _, next := range current.Neighbors() {
       if cost, blocked := u.MovementCost(next); !blocked {
         nextStep := current.stepTo(next, cost, this.H(next))
-        fmt.Println(nextStep, goal)
         q.Insert( current, nextStep )
       }
     }

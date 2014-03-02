@@ -2,6 +2,7 @@ package af
 
 import (
 	"container/heap"
+	"fmt"
 )
 
 type AStarQueue struct {
@@ -40,6 +41,7 @@ func (this *AStarQueue) Rewind(end, start Point) []Point {
 	for next := end; !next.At(start); next = this.closedSet[next] {
 		result = append(result, next)
 	}
+	fmt.Println(result)
 	return result
 }
 
