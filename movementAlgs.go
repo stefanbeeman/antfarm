@@ -72,14 +72,14 @@ func (this *AStarAlg) Move(u Unit) Action {
     }
     next,_ = this.nextPlannedStep(u)
   }
-  return &BasicAction{0, 10, func(){u.SetPosition(next)}}
+  return MakeMoveAction(u, next, 10)
 }
 
 func (this *AStarAlg) nextPlannedStep(u Unit) (Location, bool) {
   l := len(this.path)
-  if l > 0 {
-    next := this.path[l-1]
-    this.path = this.path[:l-1]
+  if len(this.path) > 0 {
+    rest, next := this.path[:l-1], this.path[l-1]
+    this.path = rest
     if _, valid := u.MovementCost(next); valid  {
       return next, true
     }
@@ -98,7 +98,8 @@ func (this *AStarAlg) plan(u Unit) bool {
   for !current.At(goal) {
     for _, next := range current.Neighbors() {
       if cost, traversable := u.MovementCost(next); traversable {
-        q.Insert( current, current.stepTo(next, cost, this.H(next)) )
+        nextStep := current.stepTo(next, cost, this.H(next))
+        q.Insert( current, nextStep )
       }
     }
 
