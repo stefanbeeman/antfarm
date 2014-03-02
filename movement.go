@@ -1,40 +1,47 @@
 package antfarm
 
 import (
-  "github.com/stefanbeeman/antfarm/pathfinding"
+	. "github.com/stefanbeeman/antfarm/common"
+	"github.com/stefanbeeman/antfarm/pathfinding"
+	"github.com/stefanbeeman/antfarm/storage"
 )
 
 type Mover interface {
-  Move(Unit) Action
-  InitMover(Unit, WorldState)
+	pathfinding.MovementAlg
+	Move(Unit) Action
+	InitMover(Unit, storage.WorldState)
 }
 
 func MakeAStarMover() BasicMover {
-  return BasicMover{
-    pathfinding.MakeAStarAlg(),
-  }
+	return BasicMover{
+		pathfinding.MakeAStarAlg(),
+	}
 }
 
 type BasicMover struct {
-	alg MovementAlg
+	pathfinding.MovementAlg
 }
 
 func (this *BasicMover) MoveCost(l Location) (int, bool) {
-  cell := this.memory().GetCell(l)
-  return 10, cell.getSolid()
+	// cell := this.memory().GetCell(l)
+	return 10, false
 }
 
 func (this *BasicMover) Move(u Unit) Action {
-  next, valid := this.alg.NextPlannedStep(u)
-  if !valid { return MakeWaitAction(0) }
-  return MakeMoveAction(u, next, 10)
+	next, valid := this.NextStep(u)
+	if !valid {
+		return MakeWaitAction(0)
+	}
+	return MakeMoveAction(u, next, 10)
 }
 
-func (this *BasicMover) InitMover(u Unit, w World) {
-  fn := func(l Location) (int, bool) {
-    if !w.Contains(l) { return 0, true }
-    return this.MoveCost(l)
-  }
+func (this *BasicMover) InitMover(u Unit, w storage.WorldState) {
+	fn := func(l Location) (int, bool) {
+		if !w.Contains(l) {
+			return 0, true
+		}
+		return this.MoveCost(l)
+	}
 
-  this.alg.RegisterMoveCost( fn )
+	this.RegisterMoveCost(fn)
 }

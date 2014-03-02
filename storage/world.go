@@ -1,4 +1,8 @@
-package antfarm
+package storage
+
+import (
+	. "github.com/stefanbeeman/antfarm/common"
+)
 
 type WorldState interface {
 	GetCell(Location) Cell
@@ -12,8 +16,7 @@ type BasicWorld struct {
 }
 
 func (this BasicWorld) GetCell(l Location) Cell {
-	x, y := l.coords()
-	return this.Grid.get(x, y)
+	return this.Grid.get(l)
 }
 
 func (this BasicWorld) GetAll() Grid {
@@ -21,21 +24,20 @@ func (this BasicWorld) GetAll() Grid {
 }
 
 func (this BasicWorld) Update(l Location, newCell Cell) {
-	x, y := l.coords()
-	this.Grid.set(x, y, newCell)
+	this.Grid.set(l, newCell)
 }
 
 func (this BasicWorld) Contains(l Location) bool {
-	return this.Grid.contains(l.coords())
+	return this.Grid.contains(l.Coords())
 }
 
-func makeWorld(w, h int) BasicWorld {
+func MakeWorld(w, h int) BasicWorld {
 	return BasicWorld{
-		makeGrid(w, h),
+		MakeGrid(w, h),
 	}
 }
 
-func makeGrid(w int, h int) BasicGrid {
+func MakeGrid(w int, h int) BasicGrid {
 	g := BasicGrid{w, h, make([][]Cell, h)}
 	for y := 0; y < h; y++ {
 		g.Cells[y] = make([]Cell, w)

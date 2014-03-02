@@ -2,6 +2,7 @@ package antfarm
 
 import (
 	"github.com/soundcloud/goyaml"
+	"github.com/stefanbeeman/antfarm/storage"
 	"io/ioutil"
 )
 
@@ -31,11 +32,11 @@ func (this YmlLoader) load(path string, pointer interface{}) {
 	}
 }
 
-func (this YmlLoader) loadMaterials() map[string]Material {
-	mats := make(map[string]Material)
+func (this YmlLoader) loadMaterials() map[string]storage.Material {
+	mats := make(map[string]storage.Material)
 	files, _ := ioutil.ReadDir(this.root + "/materials")
 	for _, file := range files {
-		mat := new(BasicMaterial)
+		mat := new(storage.BasicMaterial)
 		path := this.root + "/materials/" + file.Name()
 		this.load(path, mat)
 		mats[mat.Name] = mat

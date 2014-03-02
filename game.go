@@ -1,6 +1,8 @@
 package antfarm
 
 import (
+	. "github.com/stefanbeeman/antfarm/common"
+	"github.com/stefanbeeman/antfarm/storage"
 	"strconv"
 	"time"
 )
@@ -15,9 +17,9 @@ type Game interface {
 }
 
 type BasicGame struct {
-	World     WorldState
+	World     storage.WorldState
 	Now       int
-	Materials map[string]Material
+	Materials map[string]storage.Material
 	Skills    map[string]Skill
 	Actors    []Actor
 	pacemaker *time.Ticker
@@ -61,17 +63,17 @@ func MakeGame(data string, width int, height int, pop int) Game {
 
 	mats := yml.loadMaterials()
 	skills := yml.loadSkills()
-	world := makeWorld(width, height)
+	world := storage.MakeWorld(width, height)
 	units := make([]Actor, 0)
 	pm := time.NewTicker(time.Millisecond)
 	Game := BasicGame{world, 0, mats, skills, units, pm}
 
-	for y, row := range Game.World.GetAll().all() {
+	for y, row := range Game.World.GetAll().All() {
 		for x, _ := range row {
 			p := Point{x, y}
-			c := makeCell(p, Game.Materials["rock"], false)
+			c := storage.MakeCell(p, Game.Materials["rock"], false)
 			if x == 0 || y == 0 || x == (width-1) || y == (height-1) {
-				c.setSolid(true)
+				c.SetSolid(true)
 			}
 			Game.World.Update(p, c)
 		}

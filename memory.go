@@ -1,10 +1,15 @@
 package antfarm
 
+import (
+	. "github.com/stefanbeeman/antfarm/common"
+	"github.com/stefanbeeman/antfarm/storage"
+)
+
 type OmniscientMemory struct {
-	world WorldState
+	world storage.WorldState
 }
 
-func (this *OmniscientMemory) GetCell(p Location) Cell   { return this.world.GetCell(p) }
-func (this *OmniscientMemory) Contains(p Location) bool  { return this.world.Contains(p) }
-func (this *OmniscientMemory) Update(p Location, c Cell) { return }
-func (this *OmniscientMemory) GetAll() Grid              { return makeGrid(1, 1) }
+func (this *OmniscientMemory) GetCell(p Location) storage.Cell   { return this.world.GetCell(p) }
+func (this *OmniscientMemory) Contains(p Location) bool          { return this.world.Contains(p) }
+func (this *OmniscientMemory) Update(p Location, c storage.Cell) { return }
+func (this *OmniscientMemory) GetAll() storage.Grid              { return storage.MakeGrid(1, 1) }

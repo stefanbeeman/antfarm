@@ -1,16 +1,13 @@
-package af
+package storage
 
 type Material interface {
 	getName() string
-	getGlyph() string
-	getColor() string
 	getStructure() int
 	getHardness() int
 }
 
 type BasicMaterial struct {
 	Name      string
-	Glyph     string
 	Color     string
 	Structure int
 	Hardness  int
@@ -18,14 +15,6 @@ type BasicMaterial struct {
 
 func (this BasicMaterial) getName() string {
 	return this.Name
-}
-
-func (this BasicMaterial) getGlyph() string {
-	return this.Glyph
-}
-
-func (this BasicMaterial) getColor() string {
-	return this.Color
 }
 
 func (this BasicMaterial) getStructure() int {

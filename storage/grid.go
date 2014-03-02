@@ -1,12 +1,16 @@
-package af
+package storage
+
+import (
+	. "github.com/stefanbeeman/antfarm/common"
+)
 
 type Grid interface {
 	width() int
 	height() int
 	contains(int, int) bool
-	get(int, int) Cell
-	set(int, int, Cell)
-	all() [][]Cell
+	get(Location) Cell
+	set(Location, Cell)
+	All() [][]Cell
 }
 
 type BasicGrid struct {
@@ -23,11 +27,13 @@ func (g BasicGrid) contains(x, y int) bool {
 	return (x >= 0) && (x < g.w) && (y >= 0) && (y < g.h)
 }
 
-func (g BasicGrid) get(x, y int) Cell {
+func (g BasicGrid) get(l Location) Cell {
+	x, y := l.Coords()
 	return g.Cells[y][x]
 }
 
-func (g BasicGrid) set(x, y int, c Cell) {
+func (g BasicGrid) set(l Location, c Cell) {
+	x, y := l.Coords()
 	g.Cells[y][x] = c
 }
 
@@ -39,6 +45,6 @@ func (g BasicGrid) slice(x, y, w, h int) BasicGrid {
 	return BasicGrid{w, h, sliced}
 }
 
-func (this BasicGrid) all() [][]Cell {
+func (this BasicGrid) All() [][]Cell {
 	return this.Cells
 }
