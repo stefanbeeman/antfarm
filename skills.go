@@ -1,4 +1,4 @@
-package af
+package antfarm
 
 type Skill interface {
 	getName() string

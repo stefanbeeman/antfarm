@@ -1,4 +1,4 @@
-package af
+package antfarm
 
 type OmniscientMemory struct {
 	world WorldState

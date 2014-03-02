@@ -1,4 +1,4 @@
-package af
+package antfarm
 
 import (
 	"strconv"
@@ -63,7 +63,7 @@ func MakeGame(data string, width int, height int, pop int) Game {
 	skills := yml.loadSkills()
 	world := makeWorld(width, height)
 	units := make([]Actor, 0)
-	pm := time.NewTicker(time.Millisecond * 100)
+	pm := time.NewTicker(time.Millisecond)
 	Game := BasicGame{world, 0, mats, skills, units, pm}
 
 	for y, row := range Game.World.GetAll().all() {
