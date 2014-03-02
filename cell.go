@@ -31,7 +31,7 @@ func (this BasicCell) getMat() Material {
 	return this.Material
 }
 
-func (this BasicCell) setMat(mat Material) {
+func (this *BasicCell) setMat(mat Material) {
 	this.Material = mat
 }
 
@@ -39,7 +39,7 @@ func (this BasicCell) getSolid() bool {
 	return this.Solid
 }
 
-func (this BasicCell) setSolid(state bool) {
+func (this *BasicCell) setSolid(state bool) {
 	this.Solid = state
 }
 
@@ -47,7 +47,7 @@ func (this BasicCell) getData(prop string) int {
 	return this.Data[prop]
 }
 
-func (this BasicCell) setData(prop string, value int) {
+func (this *BasicCell) setData(prop string, value int) {
 	this.Data[prop] = value
 }
 

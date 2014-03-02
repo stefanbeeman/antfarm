@@ -27,5 +27,3 @@ func (this BasicWorld) Update(l Location, newCell Cell) {
 func (this BasicWorld) Contains(l Location) {
 	return this.grid.contains(l.coords())
 }
-
-grid := makeGrid2D(width, height)
