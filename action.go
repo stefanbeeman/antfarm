@@ -19,12 +19,14 @@ type BasicAction struct {
 }
 
 func (this *BasicAction) tic() {
-	if this.warmUp > 0 {
-		this.warmUp--
-	} else if this.warmUp == 0 {
-		this.action()
+	if this.warmUp >= 0 {
+		this.warmUp += -1
 	} else {
-		this.coolDown--
+		this.coolDown += -1
+	}
+
+	if this.warmUp == 0 {
+		this.action()
 	}
 }
 

@@ -1,5 +1,7 @@
 package af
 
+import "fmt"
+
 type MovementAlg interface {
   GoalDecider
   Move(Unit) Action
@@ -66,6 +68,7 @@ type AStarAlg struct {
 
 func (this *AStarAlg) Move(u Unit) Action {
   next, valid := this.nextPlannedStep(u)
+  fmt.Println(next)
   if !valid {
     if success := this.plan(u); !success {
       return MakeWaitAction(0)
