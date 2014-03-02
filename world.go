@@ -11,12 +11,13 @@ type BasicWorld struct {
 }
 
 func (this BasicWorld) GetCell(l Location) Cell {
-	return this.grid.get(l.coords)
+  x,y := l.coords()
+	return this.grid.get(x,y)
 }
 
 func (this BasicWorld) Update(l Location, newCell Cell) {
-	cell := this.grid.get(l.coords())
-	cell = newCell
+  x, y := l.coords()
+	this.grid.set(x, y, newCell)
 }
 
 func (this BasicWorld) Contains(l Location) bool {
@@ -29,11 +30,11 @@ func makeWorld(w,h int) BasicWorld {
 	}
 }
 
-func makeGrid(width int, height int) BasicGrid {
- g := Grid2D{w,h, make([][]Cell, height)}
- for y := 0; y < height; y++ {
-   g.Cells[y] = make([]Cell, width)
-   for x := 0; x < width; x++ {
+func makeGrid(w int, h int) BasicGrid {
+ g := BasicGrid{w, h, make([][]Cell, h)}
+ for y := 0; y < h; y++ {
+   g.Cells[y] = make([]Cell, w)
+   for x := 0; x < w; x++ {
      g.Cells[y][x] = new(BasicCell)
    }
  }

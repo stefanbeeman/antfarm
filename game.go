@@ -25,9 +25,9 @@ type BasicGame struct {
 
 func (this *BasicGame) tic() {
   this.Now++
-  for _, actor := range this.Actors {
-    // actor.tic(this)
-  }
+  // for _, actor := range this.Actors {
+  //   actor.tic(this)
+  // }
 }
 
 func (this *BasicGame) Start() {

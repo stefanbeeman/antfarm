@@ -38,7 +38,7 @@ func (this BasicSkill) getName() string {
 	return this.Name
 }
 
-func (this BasicSkill) getStat() stat {
+func (this BasicSkill) getStat() int {
 	return this.Stat
 }
 

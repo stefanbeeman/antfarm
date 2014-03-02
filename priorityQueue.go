@@ -6,20 +6,21 @@ import (
 
 type AStarQueue struct {
 	q []PathStep
-	closedSet map[Location]Location
+	closedSet map[Point]Point
 }
 
 func MakeAStarQueue() AStarQueue {
 	closedSet := make(map[Point]Point)
-	q := &PathStepPriorityQueue{}
-	heap.Init(q)
-	return AStarQueue{q, closedSet}
+	q := []PathStep{}
+	result := AStarQueue{q, closedSet}
+	heap.Init(result)
+	return result
 }
 
 func (this AStarQueue) Insert(from, to PathStep) bool {
-	fromPos, toPos := from.Position(), to.Position()
+	fromPos, toPos := from.AsPoint(), to.AsPoint()
 	if _, seen := this.closedSet[toPos]; !seen {
-		heap.Push(this.q, to)
+		heap.Push(this, to)
 		this.closedSet[toPos] = fromPos
 		return true
 	}
@@ -27,17 +28,16 @@ func (this AStarQueue) Insert(from, to PathStep) bool {
 }
 
 func (this AStarQueue) Next() PathStep {
-	return heap.Pop(this.q).(PathStep)
+	return heap.Pop(this).(PathStep)
 }
 
 func (this AStarQueue) Close(point Point) {
-	closedSet[point] = point
+	this.closedSet[point] = point
 }
 
 func (this AStarQueue) Rewind(end, start Point) []Point {
 	result := []Point{}
-	step := this.closedSet(end.AsPoint())
-	for next := end; !next.At(start); next = closedSet[next] {
+	for next := end; !next.At(start); next = this.closedSet[next] {
 		result = append(result, next)
 	}
 	return result
@@ -55,7 +55,7 @@ func (this AStarQueue) Less(i, j int) bool {
 }
 
 func (this AStarQueue) Push(x interface{}) {
-	this.q = append( this.q, x.(MoveStep) )
+	this.q = append( this.q, x.(PathStep) )
 }
 
 func (this AStarQueue) Pop() interface{} {

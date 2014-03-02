@@ -10,7 +10,7 @@ type BasicActor struct {
 	action Action
 }
 
-func (this BasicActor) SetAction(a Action) { this.Action = a }
+func (this BasicActor) SetAction(a Action) { this.action = a }
 
 type Unit interface {
 	Actor

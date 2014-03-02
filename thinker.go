@@ -10,7 +10,7 @@ type BasicGoal struct {
   weight int
 }
 
-func (this BasicGoal) Weight() { return this.weight }
+func (this BasicGoal) Weight() int { return this.weight }
 
 type Thinker interface {
   Init(Unit)
