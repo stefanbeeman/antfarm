@@ -16,7 +16,7 @@ type Unit interface {
 	Actor
 	Thinker
 	Mover
-	memory() storage.WorldState
+	memory() Memory
 	Init(storage.WorldState)
 }
 
@@ -24,12 +24,12 @@ type BasicUnit struct {
 	MutableLocation
 	Thinker
 	Mover
-	state  storage.WorldState
+	state  Memory
 	action Action
 }
 
-func (this *BasicUnit) memory() storage.WorldState { return this.state }
-func (this *BasicUnit) SetAction(a Action)         { this.action = a }
+func (this *BasicUnit) memory() Memory { return this.state }
+func (this *BasicUnit) SetAction(a Action) { this.action = a }
 
 func (this *BasicUnit) tic(w storage.WorldState) {
 	if this.action.complete() {
@@ -46,7 +46,7 @@ func (this *BasicUnit) Init(world storage.WorldState) {
 func MakeUnit(location, target Point, w storage.WorldState) Unit {
 	goal := &pathfinding.BasicGoal{target, 1}
 	thinker := &BasicThinker{[]pathfinding.Goal{goal}}
-	mover := &BasicMover{pathfinding.MakeAStarAlg()}
+	mover := MakeAStarMover()
 	state := &OmniscientMemory{w}
 	result := &BasicUnit{&location, thinker, mover, state, MakeWaitAction(0)}
 

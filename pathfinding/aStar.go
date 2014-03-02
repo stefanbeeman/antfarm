@@ -6,14 +6,13 @@ import (
 )
 
 type AStarAlg struct {
-  GoalDecider
   path PathStack
   MoveCost func(Location) (int, bool) // movement cost, blocked
 }
 
-func (this *AStarAlg) NextStep(start Location) (Location, bool) {
+func (this *AStarAlg) NextStep(start, goal Location) (Location, bool) {
   if this.path.Empty() {
-    this.findPath(start.AsPoint())
+    this.findPath(start, goal)
   }
 
   if !this.path.Empty() {
@@ -26,17 +25,16 @@ func (this *AStarAlg) NextStep(start Location) (Location, bool) {
   return Point{}, false
 }
 
-func (this *AStarAlg) findPath(start Point) bool {
-  goal := this.BestGoal()
-
+func (this *AStarAlg) findPath(start, goal Location) bool {
+  startPoint := start.AsPoint()
   q := MakeAStarQueue()
-  q.Close(start)
+  q.Close(startPoint)
 
-  current := PathStep{start, 0, this.H(start)}
+  current := PathStep{startPoint, 0, this.h(start, goal)}
   for !current.At(goal) {
     for _, next := range current.Neighbors() {
       if cost, blocked := this.MoveCost(next); !blocked {
-        nextStep := current.stepTo(next, cost, this.H(next))
+        nextStep := current.stepTo(next, cost, this.h(next, goal))
         q.Insert( current, nextStep )
       }
     }
@@ -47,10 +45,11 @@ func (this *AStarAlg) findPath(start Point) bool {
     current = q.Next()
   }
 
-  this.path = q.Rewind(current.AsPoint(), start)
+  this.path = q.Rewind(current.AsPoint(), startPoint)
   return !this.path.Empty()
 }
 
+func (this *AStarAlg) h(start, goal Location) int { return 10 * start.DistanceTo(goal) }
 func (this *AStarAlg) RegisterMoveCost(fn func(Location) (int, bool)) { this.MoveCost = fn }
 
 
@@ -89,7 +88,6 @@ func MakeAStarQueue() *AStarQueue {
 
 func MakeAStarAlg() MovementAlg {
   return &AStarAlg{
-    MakeGoalDecider(),
     []Point{},
     nil,
   }

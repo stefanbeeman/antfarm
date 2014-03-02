@@ -7,28 +7,18 @@ import (
 )
 
 type Mover interface {
-	pathfinding.MovementAlg
+	pathfinding.GoalDecider
 	Move(Unit) Action
 	initMover(Unit, storage.WorldState)
 }
 
-func MakeAStarMover() BasicMover {
-	return BasicMover{
-		pathfinding.MakeAStarAlg(),
-	}
-}
-
 type BasicMover struct {
-	pathfinding.MovementAlg
-}
-
-func (this *BasicMover) MoveCost(l Location) (int, bool) {
-	// cell := this.memory().GetCell(l)
-	return 10, false
+	pathfinding.GoalDecider
+	alg pathfinding.MovementAlg
 }
 
 func (this *BasicMover) Move(u Unit) Action {
-	next, valid := this.NextStep(u)
+	next, valid := this.alg.NextStep(u, this.BestGoal())
 	if !valid {
 		return MakeWaitAction(0)
 	}
@@ -40,8 +30,15 @@ func (this *BasicMover) initMover(u Unit, w storage.WorldState) {
 		if !w.Contains(l) {
 			return 0, true
 		}
-		return this.MoveCost(l)
+		return u.memory().MoveCost(l)
 	}
 
-	this.RegisterMoveCost(fn)
+	this.alg.RegisterMoveCost(fn)
+}
+
+func MakeAStarMover() Mover {
+	return &BasicMover{
+		pathfinding.MakeGoalDecider(),
+		pathfinding.MakeAStarAlg(),
+	}
 }
