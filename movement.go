@@ -14,6 +14,7 @@ type BasicMover struct {
 	world *World
 }
 
-function (this BasicMover) MovementCost(l Location) {
-
+function (this BasicMover) MovementCost(l Location) (int, bool) {
+	cell := this.memory().GetCell(l)
+	return 10, cell.getSolid()
 }
