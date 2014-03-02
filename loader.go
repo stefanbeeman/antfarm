@@ -2,6 +2,7 @@ package antfarm
 
 import (
 	"github.com/soundcloud/goyaml"
+	. "github.com/stefanbeeman/antfarm/common"
 	"github.com/stefanbeeman/antfarm/storage"
 	"io/ioutil"
 )
@@ -21,14 +22,14 @@ func (this *YmlLoader) setRoot(path string) {
 }
 
 func (this YmlLoader) load(path string, pointer interface{}) {
-	console.meh("Loading " + path)
+	Console.Meh("Loading " + path)
 	buffer, readErr := ioutil.ReadFile(path)
 	if readErr != nil {
-		console.broke(readErr)
+		Console.Broke(readErr)
 	}
 	marshErr := goyaml.Unmarshal(buffer, pointer)
 	if marshErr != nil {
-		console.broke(marshErr)
+		Console.Broke(marshErr)
 	}
 }
 

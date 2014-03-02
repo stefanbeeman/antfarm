@@ -1,103 +1,85 @@
-package antfarm
+package common
 
 import (
-	"errors"
 	"fmt"
 	"github.com/mgutz/ansi"
 )
 
 type Logger interface {
-	log(string)
-	dev(string)
-	meh(string)
-	success(string)
-	worked(string)
-	info(string)
-	warning(string)
-	problem(string)
-	danger(string)
-	broke(string)
-	spooky(string)
-	fun(string)
-	test()
+	Log(string)
+	Dev(string)
+	Meh(string)
+	Success(string)
+	Worked(string)
+	Info(string)
+	Warning(string)
+	Problem(string)
+	Danger(string)
+	Broke(string)
+	Spooky(string)
+	Fun(string)
 }
 
 type BasicLogger struct{}
 
-func (this BasicLogger) log(log string) {
+func (this BasicLogger) Log(log string) {
 	out := ansi.ColorCode("white") + log + ansi.ColorCode("reset")
 	fmt.Println(out)
 }
 
-func (this BasicLogger) dev(log string) {
+func (this BasicLogger) Dev(log string) {
 	out := ansi.ColorCode("white+bu") + log + ansi.ColorCode("reset")
 	fmt.Println(out)
 }
 
-func (this BasicLogger) meh(log string) {
+func (this BasicLogger) Meh(log string) {
 	out := ansi.ColorCode("gray") + log + ansi.ColorCode("reset")
 	fmt.Println(out)
 }
 
-func (this BasicLogger) success(log string) {
+func (this BasicLogger) Success(log string) {
 	out := ansi.ColorCode("green") + log + ansi.ColorCode("reset")
 	fmt.Println(out)
 }
 
-func (this BasicLogger) worked(log string) {
+func (this BasicLogger) Worked(log string) {
 	out := ansi.ColorCode("green+bu") + log + ansi.ColorCode("reset")
 	fmt.Println(out)
 }
 
-func (this BasicLogger) info(log string) {
+func (this BasicLogger) Info(log string) {
 	out := ansi.ColorCode("blue") + log + ansi.ColorCode("reset")
 	fmt.Println(out)
 }
 
-func (this BasicLogger) warning(log string) {
+func (this BasicLogger) Warning(log string) {
 	out := ansi.ColorCode("yellow") + log + ansi.ColorCode("reset")
 	fmt.Println(out)
 }
 
-func (this BasicLogger) problem(log string) {
+func (this BasicLogger) Problem(log string) {
 	out := ansi.ColorCode("yellow+bu") + log + ansi.ColorCode("reset")
 	fmt.Println(out)
 }
 
-func (this BasicLogger) danger(log string) {
+func (this BasicLogger) Danger(log string) {
 	out := ansi.ColorCode("red") + log + ansi.ColorCode("reset")
 	fmt.Println(out)
 }
 
-func (this BasicLogger) broke(log error) {
+func (this BasicLogger) Broke(log error) {
 	out := ansi.ColorCode("red+bu") + log.Error() + ansi.ColorCode("reset")
 	fmt.Println(out)
 }
 
-func (this BasicLogger) spooky(log string) {
+func (this BasicLogger) Spooky(log string) {
 	out := ansi.ColorCode("magenta") + log + ansi.ColorCode("reset")
 	fmt.Println(out)
 }
 
-func (this BasicLogger) important(log string) {
+func (this BasicLogger) Important(log string) {
 	out := ansi.ColorCode("cyan") + log + ansi.ColorCode("reset")
 	fmt.Println(out)
 }
 
-func (this BasicLogger) test() {
-	this.log("Log")
-	this.dev("Dev")
-	this.meh("Meh")
-	this.success("Success")
-	this.worked("Worked")
-	this.info("Info")
-	this.warning("Warning")
-	this.problem("Problem")
-	this.danger("Danger")
-	err := errors.New("Broke")
-	this.broke(err)
-	this.spooky("Spooky")
-	this.important("Important")
-}
-
-var console = BasicLogger{}
+var Console = BasicLogger{}
