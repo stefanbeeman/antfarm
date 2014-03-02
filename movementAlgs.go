@@ -41,7 +41,7 @@ func (this *BasicGoalDecider) BestGoal() Goal  {
 }
 
 func (this *BasicGoalDecider) H(p Location) int {
-  return p.DistanceTo( 10*this.BestGoal() )
+  return 10 * p.DistanceTo( this.BestGoal() )
 }
 
 func MakeGoalDecider() GoalDecider { return &BasicGoalDecider{[]Goal{}} }
