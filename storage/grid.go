@@ -11,6 +11,7 @@ type Grid interface {
 	get(Location) Cell
 	set(Location, Cell)
 	All() [][]Cell
+	Display() Display
 }
 
 type BasicGrid struct {
@@ -47,4 +48,30 @@ func (g BasicGrid) slice(x, y, w, h int) BasicGrid {
 
 func (this BasicGrid) All() [][]Cell {
 	return this.Cells
+}
+
+type DisplayBasicGrid struct {
+	Cells [][]Display
+}
+
+func (this BasicGrid) Display() Display {
+	cells := make([][]Display, this.h)
+	for y, row := range this.Cells {
+		cells[y] = make([]Display, this.w)
+		for x, cell := range row {
+			cells[y][x] = cell.Display()
+		}
+	}
+	return DisplayBasicGrid{cells}
+}
+
+func MakeGrid(w int, h int) BasicGrid {
+	g := BasicGrid{w, h, make([][]Cell, h)}
+	for y := 0; y < h; y++ {
+		g.Cells[y] = make([]Cell, w)
+		for x := 0; x < w; x++ {
+			g.Cells[y][x] = new(BasicCell)
+		}
+	}
+	return g
 }

@@ -36,14 +36,3 @@ func MakeWorld(w, h int) BasicWorld {
 		MakeGrid(w, h),
 	}
 }
-
-func MakeGrid(w int, h int) BasicGrid {
-	g := BasicGrid{w, h, make([][]Cell, h)}
-	for y := 0; y < h; y++ {
-		g.Cells[y] = make([]Cell, w)
-		for x := 0; x < w; x++ {
-			g.Cells[y][x] = new(BasicCell)
-		}
-	}
-	return g
-}

@@ -14,7 +14,7 @@ type Game interface {
 	Sleep(int)
 	Stop()
 	RunFor(int)
-	addActor(ai.Actor)
+	Display() Display
 }
 
 type BasicGame struct {
@@ -56,6 +56,20 @@ func (this *BasicGame) RunFor(tics int) {
 
 func (this *BasicGame) addActor(a ai.Actor) {
 	this.Actors = append(this.Actors, a)
+}
+
+type DisplayGame struct {
+	Actors []Display
+	World  Display
+}
+
+func (this BasicGame) Display() Display {
+	world := this.World.GetAll().Display()
+	actors := make([]Display, len(this.Actors))
+	for i, actor := range this.Actors {
+		actors[i] = actor.Display()
+	}
+	return DisplayGame{actors, world}
 }
 
 func MakeGame(data string, width int, height int, pop int) Game {

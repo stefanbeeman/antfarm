@@ -12,6 +12,7 @@ type Cell interface {
 	SetSolid(bool)
 	getData(string) int
 	setData(string, int)
+	Display() Display
 }
 
 type BasicCell struct {
@@ -57,4 +58,15 @@ func MakeCell(p Point, mat Material, solid bool) Cell {
 		make(map[string]int),
 	}
 	return &c
+}
+
+type DisplayBasicCell struct {
+	Solid    bool
+	Material string
+}
+
+func (this BasicCell) Display() Display {
+	solid := this.Solid
+	mat := this.Material.getName()
+	return DisplayBasicCell{solid, mat}
 }

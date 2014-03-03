@@ -1,8 +1,6 @@
 package common
 
-type Display interface {
-	Glyph() string
-}
+type Display interface{}
 
 type Displayable interface {
 	Display() Display
