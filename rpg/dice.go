@@ -4,12 +4,36 @@ import (
 	"math/rand"
 )
 
+type Roll interface {
+	GetDice() int
+	GetTN() int
+	GetShade() int
+}
+
+type BasicRoll struct {
+	Dice  int
+	TN    int
+	Shade int
+}
+
+func (this BasicRoll) GetDice() int {
+	return this.Dice
+}
+
+func (this BasicRoll) GetTN() int {
+	return this.TN
+}
+
+func (this BasicRoll) GetShade() int {
+	return this.Shade
+}
+
 type DiceRoller interface {
 	DN(int) int
 	NDN(int, int) int
 	D6() int
 	D10() int
-	RollDice(int, int, int) int
+	RollDice(Roll) int
 }
 
 type BasicDiceRoller struct{}
@@ -86,7 +110,10 @@ func (this BasicDiceRoller) shadeWhite(rolls []int) []int {
 	return append(rolls, extra...)
 }
 
-func (this BasicDiceRoller) RollDice(dice int, tn int, shade int) int {
+func (this BasicDiceRoller) RollDice(what Roll) int {
+	dice := what.GetDice()
+	tn := what.GetTN()
+	shade := what.GetShade()
 	rolls := make([]int, dice)
 	for i := range rolls {
 		rolls[i] = this.D12()

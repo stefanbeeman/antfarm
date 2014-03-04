@@ -1,6 +1,6 @@
 package rpg
 
-type Stat interface {
+type StatLevel interface {
 	get() (int, int)
 	getBase() int
 	setBase(int)
@@ -16,7 +16,7 @@ type Stat interface {
 	awardXP(int)
 }
 
-type BasicStat struct {
+type BasicStatLevel struct {
 	Base  int
 	Shade int
 	Mods  map[string]int
@@ -24,7 +24,7 @@ type BasicStat struct {
 	XP    int
 }
 
-func (this BasicStat) get() (int, int) {
+func (this BasicStatLevel) get() (int, int) {
 	value := this.Base
 	for _, mod := range this.Mods {
 		value += mod
@@ -32,51 +32,22 @@ func (this BasicStat) get() (int, int) {
 	return value, this.Shade
 }
 
-func (this BasicStat) getBase() int {
-	return this.Base
-}
+func (this BasicStatLevel) getBase() int       { return this.Base }
+func (this *BasicStatLevel) setBase(value int) { this.Base = value }
 
-func (this *BasicStat) setBase(value int) {
-	this.Base = value
-}
+func (this BasicStatLevel) getShade() int       { return this.Shade }
+func (this *BasicStatLevel) setShade(value int) { this.Shade = value }
 
-func (this BasicStat) getShade() int {
-	return this.Shade
-}
+func (this BasicStatLevel) getMod(mod string) int            { return this.Mods[mod] }
+func (this *BasicStatLevel) setMod(mod string, value int)    { this.Mods[mod] = value }
+func (this *BasicStatLevel) clearMod(mod string)             { this.Mods[mod] = 0 }
+func (this *BasicStatLevel) resetMods(mod string, value int) { this.Mods = make(map[string]int) }
 
-func (this *BasicStat) setShade(value int) {
-	this.Shade = value
-}
+func (this BasicStatLevel) getMax() int       { return this.Max }
+func (this *BasicStatLevel) setMax(value int) { this.Max = value }
 
-func (this BasicStat) getMod(mod string) int {
-	return this.Mods[mod]
-}
-
-func (this *BasicStat) setMod(mod string, value int) {
-	this.Mods[mod] = value
-}
-
-func (this *BasicStat) clearMod(mod string) {
-	this.Mods[mod] = 0
-}
-
-func (this *BasicStat) resetMods(mod string, value int) {
-	this.Mods = make(map[string]int)
-}
-
-func (this BasicStat) getMax() int {
-	return this.Max
-}
-
-func (this *BasicStat) setMax(value int) {
-	this.Max = value
-}
-
-func (this BasicStat) getXP() int {
-	return this.XP
-}
-
-func (this *BasicStat) awardXP(value int) {
+func (this BasicStatLevel) getXP() int { return this.XP }
+func (this *BasicStatLevel) awardXP(value int) {
 	this.XP += value
 	if this.Base < this.Max {
 		next := this.Base + 1
@@ -94,24 +65,22 @@ type Statted interface {
 	ClearStatMod(int, string)
 	ResetStatMods(int)
 	AwardStatXP(int, int)
-	TestStat(int) int
-	TestStats([]int) int
 }
 
 type BasicStatted struct {
-	Agility    Stat
-	Endurance  Stat
-	Health     Stat
-	Reaction   Stat
-	Strength   Stat
-	Charisma   Stat
-	Intuition  Stat
-	Logic      Stat
-	Perception Stat
-	Willpower  Stat
+	Agility    StatLevel
+	Endurance  StatLevel
+	Health     StatLevel
+	Reaction   StatLevel
+	Strength   StatLevel
+	Charisma   StatLevel
+	Intuition  StatLevel
+	Logic      StatLevel
+	Perception StatLevel
+	Willpower  StatLevel
 }
 
-func (this BasicStatted) dispatch(which int) Stat {
+func (this BasicStatted) dispatch(which int) StatLevel {
 	switch which {
 	case AGL:
 		return this.Agility
@@ -156,9 +125,7 @@ func (this BasicStatted) GetStats(which []int) (int, int) {
 	return value, shade
 }
 
-func (this BasicStatted) GetStatShade(which int) int {
-	return this.dispatch(which).getShade()
-}
+func (this BasicStatted) GetStatShade(which int) int { return this.dispatch(which).getShade() }
 
 func (this *BasicStatted) SetStatMod(which int, mod string, value int) {
 	this.dispatch(which).setMod(mod, value)
@@ -176,32 +143,22 @@ func (this *BasicStatted) AwardStatXP(which int, award int) {
 	this.dispatch(which).awardXP(award)
 }
 
-func (this *BasicStatted) TestStat(which int) {
-	dice, shade := this.GetStat(which)
-	return Dice.RollDice(dice, 6, shade)
-}
-
-func (this *BasicStatted) TestStats(which int) {
-	dice, shade := this.GetStats(which)
-	return Dice.RollDice(dice, 6, shade)
-}
-
-func MakeStat() Stat {
+func MakeStatLevel() StatLevel {
 	result := BasicStat{4, -1, make(map[string]int), 10, 0}
 	return &result
 }
 
 func MakeStatted() Stat {
 	result := BasicStatted{
-		MakeStat(),
-		MakeStat(),
-		MakeStat(),
-		MakeStat(),
-		MakeStat(),
-		MakeStat(),
-		MakeStat(),
-		MakeStat(),
-		MakeStat(),
-		MakeStat(),
+		MakeStatLevel(),
+		MakeStatLevel(),
+		MakeStatLevel(),
+		MakeStatLevel(),
+		MakeStatLevel(),
+		MakeStatLevel(),
+		MakeStatLevel(),
+		MakeStatLevel(),
+		MakeStatLevel(),
+		MakeStatLevel(),
 	}
 }

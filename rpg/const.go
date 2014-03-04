@@ -35,6 +35,13 @@ const (
 	// XP multipliers needed to advance various things
 	STATXP  = 5
 	SKILLXP = 2
+	// Wound levels
+	GRAZE   = 0
+	MINOR   = 1
+	SERIOUS = 2
+	MAJOR   = 3
+	SEVERE  = 4
+	MORTAL  = 5
 )
 
 func ParseShade(s string) int {
