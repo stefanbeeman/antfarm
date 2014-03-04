@@ -34,6 +34,7 @@ func (this YmlLoader) load(path string, pointer interface{}) {
 }
 
 func (this YmlLoader) loadMaterials() {
+	rpg.Materials = make(map[string]rpg.Material)
 	files, _ := ioutil.ReadDir(this.root + "/materials")
 	for _, file := range files {
 		mat := new(rpg.BasicMaterial)
@@ -43,16 +44,35 @@ func (this YmlLoader) loadMaterials() {
 	}
 }
 
-// func (this YmlLoader) loadSkills() map[string]Skill {
-// 	skills := make(map[string]Skill)
-// 	files, _ := ioutil.ReadDir(this.root + "/skills")
-// 	for _, file := range files {
-// 		skill := new(ProtoBasicSkill)
-// 		path := this.root + "/skills/" + file.Name()
-// 		this.load(path, skill)
-// 		skills[skill.Name] = skill.build()
-// 	}
-// 	return skills
-// }
+type protoskill struct {
+	name     string
+	title    string
+	stats    []string
+	defaults map[string]int
+}
+
+func (this protoskill) build() rpg.Skill {
+	result := new(rpg.BasicSkill)
+	result.Name = this.name
+	result.Title = this.title
+	result.Stats = make([]int, len(this.stats))
+	for i, statstring := range this.stats {
+		stat := rpg.ParseStat(statstring)
+		result.Stats[i] = stat
+	}
+	result.Defaults = this.defaults
+	return result
+}
+
+func (this YmlLoader) loadSkills() {
+	rpg.Skills = make(map[string]rpg.Skill)
+	files, _ := ioutil.ReadDir(this.root + "/skills")
+	for _, file := range files {
+		skill := new(protoskill)
+		path := this.root + "/skills/" + file.Name()
+		this.load(path, skill)
+		rpg.Skills[skill.name] = skill.build()
+	}
+}
 
 var yml = new(YmlLoader)

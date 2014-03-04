@@ -4,17 +4,20 @@ var Skills map[string]Skill
 
 type Skill interface {
 	getName() string
+	getTitle() string
 	getStats() []int
 	getDefaults() map[string]int
 }
 
 type BasicSkill struct {
 	Name     string
+	Title    string
 	Stats    []int
 	Defaults map[string]int
 }
 
 func (this BasicSkill) getName() string             { return this.Name }
+func (this BasicSkill) getTitle() string            { return this.Title }
 func (this BasicSkill) getStats() []int             { return this.Stats }
 func (this BasicSkill) getDefaults() map[string]int { return this.Defaults }
 
