@@ -1,5 +1,8 @@
 package rpg
 
 type DamageTaker interface {
-	takeDamage(Damage)
+	TakeDamage(Damage)
+	BL() int
+	Shock() int
+	Pain() int
 }

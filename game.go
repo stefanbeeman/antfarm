@@ -3,6 +3,7 @@ package antfarm
 import (
 	"github.com/stefanbeeman/antfarm/ai"
 	. "github.com/stefanbeeman/antfarm/common"
+	"github.com/stefanbeeman/antfarm/loader"
 	"github.com/stefanbeeman/antfarm/storage"
 	"strconv"
 	"time"
@@ -72,9 +73,7 @@ func (this BasicGame) Display() Display {
 }
 
 func MakeGame(data string, width int, height int, pop int) Game {
-	yml.setRoot(data)
-
-	yml.loadMaterials()
+	loader.LoadData(data)
 	world := storage.MakeWorld(width, height)
 	units := make([]ai.Actor, 0)
 	pm := time.NewTicker(time.Millisecond)
@@ -83,7 +82,7 @@ func MakeGame(data string, width int, height int, pop int) Game {
 	for y, row := range Game.World.GetAll().All() {
 		for x, _ := range row {
 			p := Point{x, y}
-			c := storage.MakeCell(p, Materials["rock"], false)
+			c := storage.MakeCell(p, "rock", false)
 			if x == 0 || y == 0 || x == (width-1) || y == (height-1) {
 				c.SetSolid(true)
 			}

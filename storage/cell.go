@@ -51,10 +51,10 @@ func (this *BasicCell) setData(prop string, value int) {
 	this.Data[prop] = value
 }
 
-func MakeCell(p Point, mat rpg.Material, solid bool) Cell {
+func MakeCell(p Point, mat string, solid bool) Cell {
 	c := BasicCell{
 		p,
-		mat,
+		rpg.Materials[mat],
 		solid,
 		make(map[string]int),
 	}
