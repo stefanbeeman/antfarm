@@ -20,7 +20,6 @@ type Game interface {
 type BasicGame struct {
 	World     storage.WorldState
 	Now       int
-	Materials map[string]storage.Material
 	Actors    []ai.Actor
 	pacemaker *time.Ticker
 }
@@ -75,16 +74,16 @@ func (this BasicGame) Display() Display {
 func MakeGame(data string, width int, height int, pop int) Game {
 	yml.setRoot(data)
 
-	mats := yml.loadMaterials()
+	yml.loadMaterials()
 	world := storage.MakeWorld(width, height)
 	units := make([]ai.Actor, 0)
 	pm := time.NewTicker(time.Millisecond)
-	Game := BasicGame{world, 0, mats, units, pm}
+	Game := BasicGame{world, 0, units, pm}
 
 	for y, row := range Game.World.GetAll().All() {
 		for x, _ := range row {
 			p := Point{x, y}
-			c := storage.MakeCell(p, Game.Materials["rock"], false)
+			c := storage.MakeCell(p, Materials["rock"], false)
 			if x == 0 || y == 0 || x == (width-1) || y == (height-1) {
 				c.SetSolid(true)
 			}

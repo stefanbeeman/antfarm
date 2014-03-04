@@ -1,5 +1,7 @@
 package rpg
 
+var Skills map[string]Skill
+
 type Skill interface {
 	getName() string
 	getStats() []int
@@ -12,9 +14,9 @@ type BasicSkill struct {
 	Defaults map[string]int
 }
 
-func (this BasicSkill) getName()     { return this.Name }
-func (this BasicSkill) getStats()    { return this.Stats }
-func (this BasicSkill) getDefaults() { return this.Defaults }
+func (this BasicSkill) getName() string             { return this.Name }
+func (this BasicSkill) getStats() []int             { return this.Stats }
+func (this BasicSkill) getDefaults() map[string]int { return this.Defaults }
 
 type SkillLevel interface {
 	get() (int, int)
@@ -39,7 +41,7 @@ type BasicSkillLevel struct {
 	XP    int
 }
 
-func (this BasicSkillLevel) getSkill() int { return this.Skill }
+func (this BasicSkillLevel) getSkill() Skill { return this.Skill }
 
 func (this BasicSkillLevel) getBase() int       { return this.Base }
 func (this *BasicSkillLevel) setBase(value int) { this.Base = value }
@@ -49,11 +51,11 @@ func (this *BasicSkillLevel) setShade(value int) { this.Shade = value }
 
 func (this BasicSkillLevel) getMod(mod string) int            { return this.Mods[mod] }
 func (this *BasicSkillLevel) setMod(mod string, value int)    { this.Mods[mod] = value }
-func (this *BasicSkilllevel) clearMod(mod string)             { this.Mods[mod] = 0 }
+func (this *BasicSkillLevel) clearMod(mod string)             { this.Mods[mod] = 0 }
 func (this *BasicSkillLevel) resetMods(mod string, value int) { this.Mods = make(map[string]int) }
 
-func (this BasicStatLevel) getXP() int { return this.XP }
-func (this *BasicStatLevel) awardXP(value int) {
+func (this BasicSkillLevel) getXP() int { return this.XP }
+func (this *BasicSkillLevel) awardXP(value int) {
 	this.XP += value
 	if this.Base < GRANDMASTER {
 		next := this.Base + 1
@@ -73,7 +75,7 @@ type Skilled interface {
 }
 
 type BasicSkilled struct {
-	Skills [string]SkillLevel
+	Skills map[string]SkillLevel
 }
 
 func (this BasicSkilled) dispatch(which string) SkillLevel { return this.Skills[which] }

@@ -9,7 +9,7 @@ type StatLevel interface {
 	getMod(string) int
 	setMod(string, int)
 	clearMod(string)
-	resetMods(string)
+	resetMods()
 	getMax() int
 	setMax(int)
 	getXP() int
@@ -38,10 +38,10 @@ func (this *BasicStatLevel) setBase(value int) { this.Base = value }
 func (this BasicStatLevel) getShade() int       { return this.Shade }
 func (this *BasicStatLevel) setShade(value int) { this.Shade = value }
 
-func (this BasicStatLevel) getMod(mod string) int            { return this.Mods[mod] }
-func (this *BasicStatLevel) setMod(mod string, value int)    { this.Mods[mod] = value }
-func (this *BasicStatLevel) clearMod(mod string)             { this.Mods[mod] = 0 }
-func (this *BasicStatLevel) resetMods(mod string, value int) { this.Mods = make(map[string]int) }
+func (this BasicStatLevel) getMod(mod string) int         { return this.Mods[mod] }
+func (this *BasicStatLevel) setMod(mod string, value int) { this.Mods[mod] = value }
+func (this *BasicStatLevel) clearMod(mod string)          { this.Mods[mod] = 0 }
+func (this *BasicStatLevel) resetMods()                   { this.Mods = make(map[string]int) }
 
 func (this BasicStatLevel) getMax() int       { return this.Max }
 func (this *BasicStatLevel) setMax(value int) { this.Max = value }
@@ -115,7 +115,7 @@ func (this BasicStatted) GetStats(which []int) (int, int) {
 	value := 0
 	shade := -1
 	for _, i := range which {
-		statValue, statShade = this.GetStat(i)
+		statValue, statShade := this.GetStat(i)
 		value += statValue
 		if statShade > shade {
 			shade = statShade
@@ -135,8 +135,8 @@ func (this *BasicStatted) ClearStatMod(which int, mod string) {
 	this.dispatch(which).clearMod(mod)
 }
 
-func (this *BasicStatted) ResetStatMods(which int, mod string) {
-	this.dispatch(which).resetMods(mod)
+func (this *BasicStatted) ResetStatMods(which int) {
+	this.dispatch(which).resetMods()
 }
 
 func (this *BasicStatted) AwardStatXP(which int, award int) {
@@ -144,11 +144,11 @@ func (this *BasicStatted) AwardStatXP(which int, award int) {
 }
 
 func MakeStatLevel() StatLevel {
-	result := BasicStat{4, -1, make(map[string]int), 10, 0}
+	result := BasicStatLevel{4, -1, make(map[string]int), 10, 0}
 	return &result
 }
 
-func MakeStatted() Stat {
+func MakeStatted() Statted {
 	result := BasicStatted{
 		MakeStatLevel(),
 		MakeStatLevel(),
@@ -161,4 +161,5 @@ func MakeStatted() Stat {
 		MakeStatLevel(),
 		MakeStatLevel(),
 	}
+	return &result
 }

@@ -2,12 +2,13 @@ package storage
 
 import (
 	. "github.com/stefanbeeman/antfarm/common"
+	"github.com/stefanbeeman/antfarm/rpg"
 )
 
 type Cell interface {
 	where() Location
-	getMat() Material
-	setMat(Material)
+	getMat() rpg.Material
+	setMat(rpg.Material)
 	GetSolid() bool
 	SetSolid(bool)
 	getData(string) int
@@ -17,7 +18,7 @@ type Cell interface {
 
 type BasicCell struct {
 	location Location
-	Material Material
+	Material rpg.Material
 	Solid    bool
 	Data     map[string]int
 }
@@ -26,11 +27,11 @@ func (this BasicCell) where() Location {
 	return this.location
 }
 
-func (this BasicCell) getMat() Material {
+func (this BasicCell) getMat() rpg.Material {
 	return this.Material
 }
 
-func (this *BasicCell) setMat(mat Material) {
+func (this *BasicCell) setMat(mat rpg.Material) {
 	this.Material = mat
 }
 
@@ -50,7 +51,7 @@ func (this *BasicCell) setData(prop string, value int) {
 	this.Data[prop] = value
 }
 
-func MakeCell(p Point, mat Material, solid bool) Cell {
+func MakeCell(p Point, mat rpg.Material, solid bool) Cell {
 	c := BasicCell{
 		p,
 		mat,
@@ -67,6 +68,6 @@ type DisplayBasicCell struct {
 
 func (this BasicCell) Display() Display {
 	solid := this.Solid
-	mat := this.Material.getName()
+	mat := this.Material.GetName()
 	return DisplayBasicCell{solid, mat}
 }

@@ -46,36 +46,36 @@ const (
 
 func ParseShade(s string) int {
 	switch s {
-	case "BLACK" || "black" || "B":
-		return BLACK
-	case "GRAY" || "gray" || "G":
+	case "GRAY":
 		return GRAY
-	case "WHITE" || "white" || "W":
+	case "WHITE":
 		return WHITE
+	default:
+		return BLACK
 	}
 }
 
 func ParseStat(s string) int {
 	switch s {
-	case "AGL" || "agility":
+	case "AGL":
 		return AGL
-	case "END" || "endurance":
+	case "END":
 		return END
-	case "HLT" || "health":
+	case "HLT":
 		return HLT
-	case "REA" || "reaction":
+	case "REA":
 		return REA
-	case "STR" || "strength":
+	case "STR":
 		return STR
-	case "CHA" || "charisma":
+	case "CHA":
 		return CHA
-	case "INT" || "intuition":
+	case "INT":
 		return INT
-	case "LOG" || "logic":
+	case "LOG":
 		return LOG
-	case "PER" || "perception":
+	case "PER":
 		return PER
-	case "WP" || "willpower":
+	case "WP":
 		return WP
 	default: //This isn't the stat you were looking for, clearly.
 		return -1

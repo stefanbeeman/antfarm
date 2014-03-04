@@ -51,11 +51,11 @@ func (this BasicDiceRoller) NDN(n int, sides int) int {
 	return total
 }
 
-func (this BasicDiceRoller) D6() {
+func (this BasicDiceRoller) D6() int {
 	return this.DN(6)
 }
 
-func (this BasicDiceRoller) D10() {
+func (this BasicDiceRoller) D10() int {
 	return this.DN(10)
 }
 
@@ -75,19 +75,13 @@ func (this BasicDiceRoller) countHits(rolls []int, tn int) int {
 	})
 }
 
-func (this BasicDiceRoller) countGlitches(rolls []int) int {
-	return this.count(rolls, func(roll int) bool {
-		return roll < 3
-	})
-}
-
 func (this BasicDiceRoller) shadeGrey(rolls []int) []int {
 	more := this.count(rolls, func(roll int) bool {
 		return roll > 10
 	})
 	extra := make([]int, 0)
 	for more > 0 {
-		die := this.D12()
+		die := this.D10()
 		extra = append(extra, die)
 		more--
 	}
@@ -100,7 +94,7 @@ func (this BasicDiceRoller) shadeWhite(rolls []int) []int {
 	})
 	extra := make([]int, 0)
 	for more > 0 {
-		die := this.D12()
+		die := this.D10()
 		extra = append(extra, die)
 		more--
 	}
@@ -116,7 +110,7 @@ func (this BasicDiceRoller) RollDice(what Roll) int {
 	shade := what.GetShade()
 	rolls := make([]int, dice)
 	for i := range rolls {
-		rolls[i] = this.D12()
+		rolls[i] = this.D10()
 	}
 	if shade <= WHITE {
 		rolls = this.shadeWhite(rolls)
@@ -124,8 +118,7 @@ func (this BasicDiceRoller) RollDice(what Roll) int {
 		rolls = this.shadeGrey(rolls)
 	}
 	hits := this.countHits(rolls, tn)
-	glitches := this.countGlitches(rolls)
-	return hits, glitches
+	return hits
 }
 
 var Dice = BasicDiceRoller{}
