@@ -3,13 +3,13 @@ package ai
 import (
 	. "github.com/stefanbeeman/antfarm/common"
 	"github.com/stefanbeeman/antfarm/pathfinding"
-	"github.com/stefanbeeman/antfarm/storage"
+	"github.com/stefanbeeman/antfarm/world"
 )
 
 type Actor interface {
 	MutableLocation
 	SetAction(Action)
-	Tic(storage.WorldState)
+	Tic(world.WorldState)
 	Display() Display
 }
 
@@ -18,7 +18,7 @@ type Unit interface {
 	Thinker
 	Mover
 	memory() Memory
-	Init(storage.WorldState)
+	Init(world.WorldState)
 }
 
 type BasicUnit struct {
@@ -31,14 +31,14 @@ type BasicUnit struct {
 
 func (this *BasicUnit) memory() Memory     { return this.state }
 func (this *BasicUnit) SetAction(a Action) { this.action = a }
-func (this *BasicUnit) Tic(w storage.WorldState) {
+func (this *BasicUnit) Tic(w world.WorldState) {
 	if this.action.complete() {
 		this.Think(this)
 	}
 	this.action.tic()
 }
 
-func (this *BasicUnit) Init(world storage.WorldState) {
+func (this *BasicUnit) Init(world world.WorldState) {
 	this.initThinker(this)
 	this.initMover(this, world)
 }
@@ -55,7 +55,7 @@ func (this BasicUnit) Display() Display {
 	return DisplayActor{x, y, tile}
 }
 
-func MakeUnit(location, target Point, w storage.WorldState) Unit {
+func MakeUnit(location, target Point, w world.WorldState) Unit {
 	goal := &pathfinding.BasicGoal{target, 1}
 	thinker := &BasicThinker{[]pathfinding.Goal{goal}}
 	mover := MakeAStarMover()

@@ -4,7 +4,7 @@ import (
 	"github.com/stefanbeeman/antfarm/ai"
 	. "github.com/stefanbeeman/antfarm/common"
 	"github.com/stefanbeeman/antfarm/loader"
-	"github.com/stefanbeeman/antfarm/storage"
+	"github.com/stefanbeeman/antfarm/world"
 	"strconv"
 	"time"
 )
@@ -16,10 +16,12 @@ type Game interface {
 	Stop()
 	RunFor(int)
 	Display() Display
+	StartShell()
+	RunCommand([]string)
 }
 
 type BasicGame struct {
-	World     storage.WorldState
+	World     world.WorldState
 	Now       int
 	Actors    []ai.Actor
 	pacemaker *time.Ticker
@@ -74,15 +76,15 @@ func (this BasicGame) Display() Display {
 
 func MakeGame(data string, width int, height int, pop int) Game {
 	loader.LoadData(data)
-	world := storage.MakeWorld(width, height)
+	state := world.MakeWorld(width, height)
 	units := make([]ai.Actor, 0)
 	pm := time.NewTicker(time.Millisecond)
-	Game := BasicGame{world, 0, units, pm}
+	Game := BasicGame{state, 0, units, pm}
 
 	for y, row := range Game.World.GetAll().All() {
 		for x, _ := range row {
 			p := Point{x, y}
-			c := storage.MakeCell(p, "rock", false)
+			c := world.MakeCell(p, "rock", false)
 			if x == 0 || y == 0 || x == (width-1) || y == (height-1) {
 				c.SetSolid(true)
 			}
@@ -92,7 +94,7 @@ func MakeGame(data string, width int, height int, pop int) Game {
 
 	for pop > 0 {
 		pop--
-		myUnit := ai.MakeUnit(Point{1, 1}, Point{width - 2, height - 2}, world)
+		myUnit := ai.MakeUnit(Point{1, 1}, Point{width - 2, height - 2}, state)
 		Game.addActor(myUnit)
 	}
 

@@ -3,13 +3,13 @@ package ai
 import (
 	. "github.com/stefanbeeman/antfarm/common"
 	"github.com/stefanbeeman/antfarm/pathfinding"
-	"github.com/stefanbeeman/antfarm/storage"
+	"github.com/stefanbeeman/antfarm/world"
 )
 
 type Mover interface {
 	pathfinding.GoalDecider
 	Move(Unit) Action
-	initMover(Unit, storage.WorldState)
+	initMover(Unit, world.WorldState)
 }
 
 type BasicMover struct {
@@ -25,7 +25,7 @@ func (this *BasicMover) Move(u Unit) Action {
 	return MakeMoveAction(u, next, 10)
 }
 
-func (this *BasicMover) initMover(u Unit, w storage.WorldState) {
+func (this *BasicMover) initMover(u Unit, w world.WorldState) {
 	fn := func(l Location) (int, bool) {
 		if !w.Contains(l) {
 			return 0, true

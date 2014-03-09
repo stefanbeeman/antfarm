@@ -2,7 +2,6 @@ package loader
 
 import (
 	"github.com/stefanbeeman/antfarm/rpg"
-	"io/ioutil"
 )
 
 type protoskill struct {
@@ -27,11 +26,11 @@ func (this protoskill) build() rpg.Skill {
 
 func loadSkills(root string) {
 	rpg.Skills = make(map[string]rpg.Skill)
-	files, _ := ioutil.ReadDir(root + "/skills")
-	for _, file := range files {
-		skill := new(protoskill)
-		path := root + "/skills/" + file.Name()
-		loadFile(path, skill)
-		rpg.Skills[skill.name] = skill.build()
+	skills := make(map[string]protoskill)
+	path := root + "/skills.yml"
+	loadFile(path, skills)
+	for name, skill := range skills {
+		skill.name = name
+		rpg.Skills[name] = skill.build()
 	}
 }

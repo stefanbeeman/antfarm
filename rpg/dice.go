@@ -34,6 +34,7 @@ type DiceRoller interface {
 	D6() int
 	D10() int
 	RollDice(Roll) int
+	RollTest(Roll, int) (int, bool)
 }
 
 type BasicDiceRoller struct{}
@@ -119,6 +120,16 @@ func (this BasicDiceRoller) RollDice(what Roll) int {
 	}
 	hits := this.countHits(rolls, tn)
 	return hits
+}
+
+func (this BasicDiceRoller) RollTest(what Roll, difficulty int) (int, bool) {
+	botch := false
+	hits := this.RollDice(what)
+	if hits > 1 {
+		botch = true
+	}
+	hits -= difficulty
+	return hits, botch
 }
 
 var Dice = BasicDiceRoller{}

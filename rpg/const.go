@@ -25,13 +25,15 @@ const (
 	JOURNEYMAN  = 5
 	MASTER      = 6
 	GRANDMASTER = 7
+	LEGENDARY   = 8
+	FLAWLESS    = 9
 	// Difficulty levels
 	SIMPLE    = 1
 	AVERAGE   = 2
 	TRICKY    = 3
 	DIFFICULT = 4
 	HARD      = 5
-	CRAZY     = 6
+	INSANE    = 6
 	// XP multipliers needed to advance various things
 	STATXP  = 5
 	SKILLXP = 2

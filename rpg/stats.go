@@ -10,16 +10,21 @@ type StatLevel interface {
 	setMod(string, int)
 	clearMod(string)
 	resetMods()
+	getApt() int
+	setApt(int)
 	getMax() int
 	setMax(int)
 	getXP() int
 	awardXP(int)
+	roll() Roll
+	test(int) (int, bool)
 }
 
 type BasicStatLevel struct {
 	Base  int
 	Shade int
 	Mods  map[string]int
+	Apt   int
 	Max   int
 	XP    int
 }
@@ -43,6 +48,9 @@ func (this *BasicStatLevel) setMod(mod string, value int) { this.Mods[mod] = val
 func (this *BasicStatLevel) clearMod(mod string)          { this.Mods[mod] = 0 }
 func (this *BasicStatLevel) resetMods()                   { this.Mods = make(map[string]int) }
 
+func (this BasicStatLevel) getApt() int       { return this.Apt }
+func (this *BasicStatLevel) setApt(value int) { this.Apt = value }
+
 func (this BasicStatLevel) getMax() int       { return this.Max }
 func (this *BasicStatLevel) setMax(value int) { this.Max = value }
 
@@ -58,6 +66,22 @@ func (this *BasicStatLevel) awardXP(value int) {
 	}
 }
 
+func (this BasicStatLevel) roll() Roll {
+	dice, shade := this.get()
+	return BasicRoll{dice, 6, shade}
+}
+
+func (this *BasicStatLevel) test(difficulty int) (int, bool) {
+	roll := this.roll()
+	hits, botch := Dice.RollTest(roll, difficulty)
+	if botch {
+		this.awardXP(1)
+	} else if hits <= this.Apt {
+		this.awardXP(1)
+	}
+	return hits, botch
+}
+
 type Statted interface {
 	GetStat(int) (int, int)
 	GetStats([]int) (int, int)
@@ -65,6 +89,8 @@ type Statted interface {
 	ClearStatMod(int, string)
 	ResetStatMods(int)
 	AwardStatXP(int, int)
+	RollStat(int) Roll
+	TestStat(int, int) (int, bool)
 }
 
 type BasicStatted struct {
@@ -143,8 +169,16 @@ func (this *BasicStatted) AwardStatXP(which int, award int) {
 	this.dispatch(which).awardXP(award)
 }
 
+func (this BasicStatted) RollStat(which int) Roll {
+	return this.dispatch(which).roll()
+}
+
+func (this BasicStatted) TestStat(which int, difficulty int) (int, bool) {
+	return this.dispatch(which).test(difficulty)
+}
+
 func MakeStatLevel() StatLevel {
-	result := BasicStatLevel{4, -1, make(map[string]int), 10, 0}
+	result := BasicStatLevel{4, -1, make(map[string]int), 0, 7, 0}
 	return &result
 }
 
