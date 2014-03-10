@@ -15,17 +15,17 @@ type Grid interface {
 }
 
 type BasicGrid struct {
-	w     int
-	h     int
+	W     int
+	H     int
 	Cells [][]Cell
 }
 
-func (this BasicGrid) width() int    { return this.w }
-func (this BasicGrid) height() int   { return this.h }
-func (g BasicGrid) size() (int, int) { return g.w, g.h }
+func (this BasicGrid) width() int    { return this.W }
+func (this BasicGrid) height() int   { return this.H }
+func (g BasicGrid) size() (int, int) { return g.W, g.H }
 
 func (g BasicGrid) contains(x, y int) bool {
-	return (x >= 0) && (x < g.w) && (y >= 0) && (y < g.h)
+	return (x >= 0) && (x < g.W) && (y >= 0) && (y < g.H)
 }
 
 func (g BasicGrid) get(l Location) Cell {
@@ -55,9 +55,9 @@ type DisplayBasicGrid struct {
 }
 
 func (this BasicGrid) Display() Display {
-	cells := make([][]Display, this.h)
+	cells := make([][]Display, this.H)
 	for y, row := range this.Cells {
-		cells[y] = make([]Display, this.w)
+		cells[y] = make([]Display, this.W)
 		for x, cell := range row {
 			cells[y][x] = cell.Display()
 		}

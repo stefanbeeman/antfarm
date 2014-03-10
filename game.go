@@ -1,10 +1,13 @@
 package antfarm
 
 import (
+	// "encoding/gob"
+	// "fmt"
 	"github.com/stefanbeeman/antfarm/ai"
 	. "github.com/stefanbeeman/antfarm/common"
 	"github.com/stefanbeeman/antfarm/loader"
 	"github.com/stefanbeeman/antfarm/world"
+	// "os"
 	"strconv"
 	"time"
 )
@@ -18,6 +21,7 @@ type Game interface {
 	Display() Display
 	StartShell()
 	RunCommand([]string)
+	Save(string)
 }
 
 type BasicGame struct {
@@ -72,6 +76,22 @@ func (this BasicGame) Display() Display {
 		actors[i] = actor.Display()
 	}
 	return DisplayGame{actors, world}
+}
+
+func (this BasicGame) Save(path string) {
+	// file, fileErr := os.Create(path)
+	// if fileErr != nil {
+	// 	fmt.Println(fileErr)
+	// } else {
+	// 	enc := gob.NewEncoder(file)
+	// }
+
+	// data, err :=
+	// if err != nil {
+	// 	fmt.Println(err)
+	// } else {
+	// 	ioutil.WriteFile(path, data, 0644)
+	// }
 }
 
 func MakeGame(data string, width int, height int, pop int) Game {

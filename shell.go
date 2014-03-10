@@ -3,6 +3,7 @@ package antfarm
 import (
 	"bufio"
 	"fmt"
+	"github.com/stefanbeeman/antfarm/world"
 	"os"
 	"strconv"
 	"strings"
@@ -36,6 +37,19 @@ func (this BasicGame) RunCommand(commands []string) {
 		}
 	case "now":
 		fmt.Println(this.Now)
+	case "save":
+		if len(commands) > 1 {
+			this.Save(commands[1])
+		} else {
+			fmt.Println("Please provide a filename for your save.")
+		}
+	case "maze":
+		w, _ := strconv.Atoi(commands[1])
+		h, _ := strconv.Atoi(commands[2])
+		t, _ := strconv.Atoi(commands[3])
+		s, _ := strconv.Atoi(commands[4])
+		maze := world.GenMaze(w, h, t, s)
+		world.PrintMaze(maze)
 	default:
 		fmt.Println("try that again")
 	}

@@ -17,14 +17,14 @@ type Cell interface {
 }
 
 type BasicCell struct {
-	location Location
+	Location Location
 	Material rpg.Material
 	Solid    bool
 	Data     map[string]int
 }
 
 func (this BasicCell) where() Location {
-	return this.location
+	return this.Location
 }
 
 func (this BasicCell) getMat() rpg.Material {
